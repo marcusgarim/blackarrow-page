@@ -1,53 +1,4 @@
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-        <script src="https://cdn.tailwindcss.com"></script>
-
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        border: 'hsl(216 100% 20%)',
-                        background: 'hsl(216 100% 5%)',
-                        foreground: 'hsl(0 0% 98%)',
-                        primary: '#0068ff',
-                        'primary-foreground': 'hsl(0 0% 100%)',
-                        secondary: '#0068ff',
-                        'secondary-foreground': 'hsl(0 0% 100%)',
-                        muted: 'hsl(216 100% 15%)',
-                        'muted-foreground': 'hsl(216 20% 70%)',
-                        accent: '#0068ff',
-                        'accent-foreground': 'hsl(0 0% 100%)',
-                    },
-                    fontFamily: {
-                        sans: ['Archivo', 'sans-serif'],
-                        heading: ['Archivo', 'sans-serif'],
-                    },
-                    animation: {
-                        'image-glow': 'image-glow 4s ease-out 0.6s forwards',
-                    },
-                    keyframes: {
-                        'image-glow': {
-                            '0%': {
-                                opacity: '0',
-                                'animation-timing-function': 'cubic-bezier(.74, .25, .76, 1)',
-                            },
-                            '10%': {
-                                opacity: '0.5',
-                                'animation-timing-function': 'cubic-bezier(.12, .01, .08, .99)',
-                            },
-                            '100%': { opacity: '0.7' },
-                        },
-                    },
-                },
-            },
-        }
-
-    </script>
-
-<script>
-        gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger);
 
         document.addEventListener('DOMContentLoaded', function () {
 
@@ -186,8 +137,7 @@
 
         });
 
-    </script>
-    <script>
+    
         document.addEventListener('DOMContentLoaded', function () {
             const sliderItems = document.querySelectorAll('.slider-item');
             const sliderDots = document.querySelectorAll('.slider-dot');
@@ -357,8 +307,7 @@
                 }
             });
         });
-    </script>
-    <script>
+    
         document.addEventListener('DOMContentLoaded', function () {
             const sliderItems = document.querySelectorAll('.slider-item');
             const sliderDots = document.querySelectorAll('.slider-dot');
@@ -495,8 +444,7 @@
                 else if (!document.hidden && isPlaying) startSlideshow();
             });
         });
-    </script>
-    <script>
+    
         document.addEventListener('DOMContentLoaded', function () {
             const modal = document.getElementById('signupModal');
             const openBtn = document.getElementById('openModalBtn');
@@ -517,4 +465,39 @@
                 }
             });
         });
-    </script>
+    
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>

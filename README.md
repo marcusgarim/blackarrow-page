@@ -1,44 +1,41 @@
-# BlackArrow – Landing Page Internacional
+# BlackArrow - Landing Page
 
-Landing page moderna e responsiva para o produto internacional BlackArrow. Desenvolvida com foco em performance, SEO e conversão, pronta para campanhas globais.
+Landing page responsiva e de alta performance desenvolvida para promover a solução BlackArrow no mercado digital. Este projeto foi projetado com foco em escalabilidade, modularidade e impacto visual.
 
-## Sobre o Projeto
+## Principais Funcionalidades
 
-A BlackArrow é uma solução inovadora projetada para impactar o mercado global. Esta landing page serve como ponto de entrada para apresentar seus benefícios, gerar leads e converter visitantes em clientes, com design clean e copy persuasiva.
+- Estrutura semântica e acessível (HTML5)
+- Estilos modernos com Tailwind CSS configurado via CDN
+- Arquitetura de código modular (JS e CSS separados por propósito)
+- Design responsivo para diferentes tamanhos de tela
+- Componentes interativos com animações suaves via GSAP
+- Carrossel de features com autoplay, indicadores e suporte a swipe
+- Cards do tipo "bento grid" com hover animado e gradientes reativos
+- Seções com entrada animada e efeito de revelação por scroll
+- Modal com iframe e efeito `backdrop-filter` para captura de leads
+- Estilo dark-mode com tipografia personalizada (Archivo e Inter)
+- Estilização avançada com `@keyframes`, sombras internas e gradientes
+- Animações de interface baseadas em interação do usuário (mouse, toque, scroll)
 
-Totalmente responsiva, otimizada para SEO e preparada para integrações com ferramentas de marketing.
+## Estrutura de Pastas
 
-## Funcionalidades
+```
+landing-page/
+├── index.html
+├── preview.png
+├── scripts/
+│   ├── main.js
+│   └── tailwind-config.js
+├── styles/
+│   ├── main.css
+│   ├── reset.css
+│   └── tailwind.css (opcional)
+└── README.md
+```
 
-- Layout responsivo e mobile-first
-- Otimização de performance (Lighthouse 90+)
-- SEO on-page configurado
-- Seção de benefícios e prova social
-- Formulário integrado para geração de leads
-- Código modular e fácil de manter
-- Animações com scroll reveal (entrada suave, blur, movimento)
-- Hover interativo com cards em grid (estilo Bento Grid)
-- Efeitos de neon em botões, bordas e textos
-- Gradientes animados e profundidade visual com sombras internas e externas
-- Cards mágicos com fundo reativo ao mouse
-- Modal com blur de fundo (backdrop-filter) e animação de entrada
-- Carrossel com autoplay, transição suave e indicadores
-- Layout escuro moderno com tipografia acessível e foco em legibilidade
 
-## Prévia
+## Preview
 
-![preview](./preview-black-arrow.png)
+[🔗 Acesse a publicada **AQUI**](https://use.nelogica.com.br/blackarrow)
 
-## Tecnologias Utilizadas
-
-- HTML5 + CSS3 com variáveis customizadas, animações (`@keyframes`) e pseudo-elementos
-- JavaScript Vanilla para interatividade
-- (Opcional) Integração com EmailJS, HubSpot ou outras ferramentas de marketing
-
-## Como usar
-
-Clone o repositório e abra o arquivo `index.html` no navegador.
-
-```bash
-git clone https://github.com/seuusuario/blackarrow-landing.git
-cd blackarrow-landing
+![Preview da Landing Page](preview.png)

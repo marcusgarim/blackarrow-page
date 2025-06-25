@@ -1,2511 +1,450 @@
 
 <!DOCTYPE html>
+
 <html lang="pt">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trial BlackArrow</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- GSAP for animations -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        border: 'hsl(216 100% 20%)',
-                        background: 'hsl(216 100% 5%)',
-                        foreground: 'hsl(0 0% 98%)',
-                        primary: '#0068ff',
-                        'primary-foreground': 'hsl(0 0% 100%)',
-                        secondary: '#0068ff',
-                        'secondary-foreground': 'hsl(0 0% 100%)',
-                        muted: 'hsl(216 100% 15%)',
-                        'muted-foreground': 'hsl(216 20% 70%)',
-                        accent: '#0068ff',
-                        'accent-foreground': 'hsl(0 0% 100%)',
-                    },
-                    fontFamily: {
-                        sans: ['Archivo', 'sans-serif'],
-                        heading: ['Archivo', 'sans-serif'],
-                    },
-                    animation: {
-                        'image-glow': 'image-glow 4s ease-out 0.6s forwards',
-                    },
-                    keyframes: {
-                        'image-glow': {
-                            '0%': {
-                                opacity: '0',
-                                'animation-timing-function': 'cubic-bezier(.74, .25, .76, 1)',
-                            },
-                            '10%': {
-                                opacity: '0.5',
-                                'animation-timing-function': 'cubic-bezier(.12, .01, .08, .99)',
-                            },
-                            '100%': { opacity: '0.7' },
-                        },
-                    },
-                },
-            },
-        }
-
-    </script>
-    <style>
-        /* Reset margins and paddings */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #0068ff;
-            --dark: #121212;
-            --darker: #0a0a0a;
-            --light-text: #f5f5f5;
-            --gray-text: #a0a0a0;
-            --transition-speed: 0.5s;
-        }
-
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
-
-        .Z {
-            padding: 0 !important;
-        }
-
-        body {
-            background-color: hsl(0 0% 3.9%);
-            color: hsl(0 0% 98%);
-            font-family: 'Archivo', sans-serif;
-            position: relative;
-            z-index: 0;
-        }
-
-        .gradient {
-            background: conic-gradient(from 230.29deg at 51.63% 52.16%,
-                    #005ce6 0deg,
-                    #0068ff 60deg,
-                    #338dff 120deg,
-                    #66aaff 180deg,
-                    #3399ff 240deg,
-                    #0068ff 300deg,
-                    #005ce6 360deg);
-        }
-
-        /* Bento Grid Styles */
-        .bento-grid {
-            display: grid;
-            width: 100%;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            auto-rows: 22rem;
-        }
-
-        /* Base bento-card styles */
-        .bento-card {
-            position: relative;
-            overflow: hidden;
-            border-radius: 0.75rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background-color: #000;
-            box-shadow: 0 -20px 80px -20px rgba(255, 255, 255, 0.12) inset;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: all 0.4s ease;
-            will-change: transform, opacity, filter;
-            /* Performance optimization */
-        }
-
-        #dashboard-container {
-            display: none;
-        }
-
-        .bento-card:hover {
-            box-shadow: 0 0 20px rgba(0, 104, 255, 0.2);
-            border-color: rgba(0, 104, 255, 0.3);
-        }
-
-        .bento-card-content {
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            padding: 2rem;
-            transition: all 0.4s ease;
-            position: relative;
-        }
-
-        .bento-card:hover .bento-card-content {
-            transform: translateY(-10px);
-        }
-
-        .bento-card-icon {
-            height: 3rem;
-            width: 3rem;
-            transform-origin: left;
-            color: #525252;
-            transition: all 0.4s ease;
-        }
-
-        .bento-card:hover .bento-card-icon {
-            transform: scale(0.75);
-            color: #0068ff;
-        }
-
-        .bento-card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #d4d4d4;
-            position: relative;
-            z-index: 5;
-        }
-
-        .bento-card-description {
-            max-width: 32rem;
-            color: #a3a3a3;
-            position: relative;
-            z-index: 5;
-        }
-
-        /* Base background styles for all cards */
-        .bento-card-background {
-            position: absolute;
-            inset: 0;
-            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-            background-size: cover;
-            background-position: right center;
-            opacity: 0.75;
-            transform: scale(1.05);
-            mask-image: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.8) 60%);
-            -webkit-mask-image: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.8) 60%);
-            z-index: 1;
-        }
-
-
-        /* Small card background animation (scale up) */
-        .bento-card.small-card:hover .bento-card-background {
-            transform: scale(1.15);
-            opacity: 1;
-        }
-
-        /* Large card background animation (slide left) */
-        .bento-card.large-card:hover .bento-card-background {
-            transform: translateX(-15px);
-            opacity: 1;
-        }
-
-        /* Gradient overlay for text readability */
-        .bento-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg,
-                    rgba(0, 0, 0, 0.95) 0%,
-                    rgba(0, 0, 0, 0.8) 40%,
-                    rgba(0, 0, 0, 0.6) 70%,
-                    rgba(0, 0, 0, 0.4) 100%);
-            z-index: 2;
-            transition: opacity 0.4s ease;
-        }
-
-        .bento-card:hover::after {
-            opacity: 0.8;
-        }
-
-        #features-2 {
-            display: none;
-        }
-
-        /* Feature Tag */
-        .feature-tag {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.5rem 1.25rem;
-            background-color: rgba(23, 23, 23, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 9999px;
-            color: white;
-            font-size: 0.875rem;
-            font-weight: 500;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2), 0 0 2px rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-tag::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(45deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.08));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .feature-tag:hover::before {
-            opacity: 1;
-        }
-
-        .feature-tag:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 15px rgba(0, 104, 255, 0.3);
-        }
-
-        .feature-tag i {
-            margin-left: 0.5rem;
-            font-size: 0.75rem;
-            transition: transform 0.3s ease;
-        }
-
-        .feature-tag:hover i {
-            transform: translateX(3px);
-        }
-
-        /* Scroll Reveal Animation Classes - UPDATED */
-        .reveal-from-bottom {
-            opacity: 0;
-            transform: translateY(30px);
-            filter: blur(8px);
-            transition: all 0.4s ease;
-            /* Faster transition: 0.6s → 0.4s */
-        }
-
-        .reveal-from-left {
-            opacity: 0;
-            transform: translateX(-30px);
-            filter: blur(8px);
-            transition: all 0.4s ease;
-            /* Faster transition: 0.6s → 0.4s */
-        }
-
-        .reveal-from-right {
-            opacity: 0;
-            transform: translateX(30px);
-            filter: blur(8px);
-            transition: all 0.4s ease;
-            /* Faster transition: 0.6s → 0.4s */
-        }
-
-        .reveal-visible {
-            opacity: 1;
-            transform: translate(0);
-            filter: blur(0);
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .bento-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .bg-grid {
-            background-image: radial-gradient(#161616 10%, transparent 11%);
-            background-size: 1rem 1rem;
-            background-repeat: repeat;
-            mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 70%, transparent 110%);
-            z-index: -1;
-        }
-
-        #home {
-            z-index: -1;
-        }
-
-        /* Enhanced Magic Card with Neon Hover Effect */
-        .magic-card {
-            position: relative;
-            max-width: 24rem;
-            overflow: hidden;
-            border-radius: 0.75rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: linear-gradient(to right, hsl(0 0% 3.9%), rgba(15, 15, 15, 0.4));
-            padding: 1rem 1.5rem;
-            transition: all 0.3s ease;
-            opacity: 0;
-            transform: translateY(20px);
-            filter: blur(8px);
-            /* Added blur effect */
-            will-change: transform, opacity, filter;
-            /* Performance optimization */
-        }
-
-        .magic-card:hover {
-            box-shadow: 0 0 15px rgba(0, 104, 255, 0.3);
-            border: 1px solid rgba(0, 104, 255, 0.3);
-        }
-
-        .magic-card:hover::after {
-            opacity: 1;
-        }
-
-        .magic-card::after {
-            content: '';
-            pointer-events: none;
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            background: radial-gradient(500px circle at var(--x) var(--y), rgba(0, 104, 255, 0.15), transparent 60%);
-            z-index: 3;
-        }
-
-        /* Apply the same background image style to magic cards */
-        .magic-card .bento-card-background {
-            position: absolute;
-            inset: 0;
-            transition: all 0.3s ease;
-            background-image: url('https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/dashboard-light.png?v=1745322801269');
-            background-size: cover;
-            background-position: center;
-            opacity: 0.15;
-            transform: translateX(0);
-            mask-image: linear-gradient(to top right, transparent 10%, rgba(0, 0, 0, 0.8) 90%);
-            -webkit-mask-image: linear-gradient(to top right, transparent 10%, rgba(0, 0, 0, 0.8) 90%);
-            z-index: 1;
-        }
-
-        .magic-card:hover .bento-card-background {
-            transform: translateX(15px);
-            opacity: 0.2;
-        }
-
-        /* Ensure content in magic cards is above the background */
-        .magic-card>div:first-child {
-            position: relative;
-            z-index: 10;
-        }
-
-        /* Enhanced Lamp Light Effect for CTA Section */
-        .cta-container {
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            min-height: 500px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 0.8), rgba(10, 10, 10, 0.95));
-            border-radius: 1rem;
-        }
-
-        .cta-content {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            text-align: center;
-            padding: 2rem;
-        }
-
-        /* Horizontal Light Bar */
-        .light-bar-container {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            z-index: 1;
-            overflow: hidden;
-        }
-
-        .light-bar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 0;
-            background: linear-gradient(90deg,
-                    rgba(168, 85, 247, 0) 0%,
-                    rgba(168, 85, 247, 0.7) 50%,
-                    rgba(168, 85, 247, 0) 100%);
-            transform-origin: left center;
-        }
-
-        .light-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 0;
-            height: 150px;
-            background: radial-gradient(ellipse, rgba(168, 85, 247, 0.4) 0%, rgba(168, 85, 247, 0) 70%);
-            border-radius: 50%;
-            filter: blur(40px);
-            opacity: 0;
-        }
-
-        /* Neon Button Effect */
-        .neon-button {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .neon-button:hover {
-            box-shadow: 0 0 15px rgba(0, 104, 255, 0.3);
-        }
-
-        .neon-button::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, rgba(0, 104, 255, 0.2), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-
-        .neon-button:hover::after {
-            opacity: 1;
-        }
-
-        /* Typo Button Style */
-        .typo-button {
-            background: radial-gradient(49.74% 71.43% at 50.26% 100%, #0068ffb3, #0068ff59),
-                linear-gradient(0deg, #1a1a1a, #1a1a1a) !important;
-            border: none;
-            padding: 20px 30px;
-            color: white;
-            font-size: 16px;
-            border-radius: 8px;
-            backdrop-filter: blur(10px) saturate(150%) brightness(85%);
-            opacity: 0.85;
-            /* Add some transparency */
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            text-decoration: none;
-            cursor: pointer;
-            line-height: 1.2;
-            width: auto !important;
-            /* ensure it stays inline-flex */
-
-        }
-
-        .typo-button:hover {
-            opacity: 1;
-            backdrop-filter: blur(8px) saturate(120%) brightness(90%);
-        }
-
-        .typo-button i {
-            margin-left: 0.5rem;
-        }
-
-        a,
-        a:focus,
-        a:hover {
-            text-decoration: none;
-        }
-
-        /* Animations */
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
-
-            100% {
-                transform: translateY(0px);
-            }
-        }
-
-        @keyframes pulse {
-            0% {
-                opacity: 0.5;
-            }
-
-            50% {
-                opacity: 1;
-            }
-
-            100% {
-                opacity: 0.5;
-            }
-        }
-
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .animate-pulse {
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        /* Neon Text Effect - Blue Variant */
-        .neon-text {
-            text-shadow:
-                0 0 5px rgba(0, 104, 255, 0.5),
-                0 0 10px rgba(0, 104, 255, 0.3);
-            transition: text-shadow 0.3s ease;
-        }
-
-        .neon-text:hover {
-            text-shadow:
-                0 0 5px rgba(0, 104, 255, 0.7),
-                0 0 10px rgba(0, 104, 255, 0.5),
-                0 0 15px rgba(0, 104, 255, 0.3);
-        }
-
-
-        /* Dashboard Frame Neon Effect */
-        .dashboard-frame {
-            position: relative;
-            border-radius: 0.75rem;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .dashboard-frame::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            background: linear-gradient(45deg,
-                    rgba(0, 104, 255, 0.3),
-                    transparent,
-                    rgba(0, 104, 255, 0.3));
-            background-size: 200% 200%;
-            animation: gradientBorder 5s ease infinite;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .dashboard-frame.active::before {
-            opacity: 1;
-        }
-
-        @keyframes gradientBorder {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        /* Pop up */
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            height: 100dvh;
-            /* <-- KEY! (instead of just relying on inset) */
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.25s ease;
-        }
-
-
-        .modal.show {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal-content {
-            background-color: #141516;
-            border-radius: 0.75rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            border: 1px solid #525252;
-            max-width: 400px;
-            width: 90%;
-            max-height: 90dvh;
-            /* <- here too, better on mobile */
-            overflow-y: auto;
-            transform: scale(0.95);
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        .tatsu-custom-select-value {
-            background: rgba(255, 255, 255, 0.07) !important;
-        }
-
-        .tatsu-custom-select-value-phone-code {
-            width: auto !important;
-            background: none !important;
-            padding: 0 !important;
-            height: auto !important;
-
-        }
-
-
-        input {
-            background: rgba(255, 255, 255, 0.07) !important;
-            border: 1px solid rgba(255, 255, 255, .0705882353);
-            border-radius: 4px;
-            padding: 20px 10px 2px;
-            height: 50px;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 15.23px;
-            color: #fff !important;
-        }
-
-        #popupForm {
-            padding: 20px;
-        }
-
-        .modal.show .modal-content {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-        @keyframes fadeInUp {
-            0% {
-                transform: translateY(30px) scale(0.95);
-                opacity: 0;
-            }
-
-            100% {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-        }
-
-        .modal.show .modal-content {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-        .close-modal {
-            font-size: 1.5rem;
-            color: white;
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-        }
-
-        .close-modal:hover {
-            color: #ccc;
-        }
-
-        /* Shake Animation for errors */
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            20%,
-            60% {
-                transform: translateX(-10px);
-            }
-
-            40%,
-            80% {
-                transform: translateX(10px);
-            }
-        }
-
-        .animate-shake {
-            animation: shake 0.5s;
-        }
-
-        /* Desktop (min-width: 768px) */
-        @media (min-width: 768px) {
-            .testimonial-image-container {
-                position: relative;
-                width: 1300px;
-                /* Removed !important */
-                height: 100%;
-                overflow: hidden;
-                border-radius: 0.5rem;
-            }
-
-            /* Hide mobile image container on desktop */
-            .testimonial-image-container-mobile {
-                display: none;
-            }
-        }
-
-        /* Mobile (max-width: 768px) */
-        @media (max-width: 768px) {
-
-            /* Hide desktop image container on mobile */
-            .testimonial-image-container {
-                display: none;
-            }
-
-            /* Show mobile image container on mobile */
-            .testimonial-image-container-mobile {
-                position: relative;
-                height: 100%;
-                overflow: hidden;
-                border-radius: 0.5rem;
-            }
-        }
-
-
-        .testimonial-image-container-mobile {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            border-radius: 0.5rem;
-        }
-
-        .testimonial-image-container::before,
-        .testimonial-image-container::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            height: 100px;
-            z-index: 2;
-        }
-
-        .testimonial-image-container::before {
-            top: 0;
-
-        }
-
-        .testimonial-image-container::after {
-            bottom: 0;
-
-        }
-
-        .testimonial-image {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .video-container {
-            align-items: center;
-            justify-content: center;
-            padding-top: 50px;
-            padding-bottom: 20px;
-            position: relative;
-            /* Required to position the pseudo-element */
-        }
-
-        /* Video frame styling */
-        .video-frame {
-            /* width: 1256px; */
-            position: relative;
-            padding: 8px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: rgba(255, 255, 0, 0.03) 0px 0px 40px,
-                rgba(255, 255, 0, 0.3) 0px 0.5px 0px inset;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-            /* For positioning the blur inside the video frame */
-        }
-
-        /* Create the blur effect only behind the video frame */
-        .video-container::after {
-            content: '';
-            position: absolute;
-            top: -10px;
-            /* Reduce the distance the blur moves outside */
-            left: -10px;
-            /* Reduce the distance the blur moves outside */
-            width: calc(100% + 20px);
-            /* Slightly increase the width expansion to make the blur bleed a little */
-            height: calc(100% + 20px);
-            /* Slightly increase the height expansion to make the blur bleed a little */
-            background-color: rgba(0, 104, 255, 0.6);
-            /* Solid blue color (0068FF) */
-            filter: blur(80px);
-            /* Increase the blur effect to make it more intense */
-            z-index: -1;
-            /* Ensure the blur stays behind the video frame */
-            animation: pulsate 4s infinite ease-in-out;
-            /* Pulsating animation (slower) */
-            border-radius: 15px;
-            /* Rounded corners to match the video frame */
-        }
-
-        /* Animation to make the blur pulsate */
-        @keyframes pulsate {
-            0% {
-                transform: scale(1);
-                opacity: 0.5;
-            }
-
-            50% {
-                transform: scale(1.05);
-                opacity: 0.8;
-            }
-
-            100% {
-                transform: scale(1);
-                opacity: 0.5;
-            }
-        }
-
-        /* Video styling */
-        .video-frame video {
-            width: 100%;
-            height: 100%;
-            border-radius: 8px;
-            object-fit: cover;
-        }
-
-        .desktop-hero {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .mobile-hero {
-            display: none;
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
-
-        /* Switch visibility on mobile */
-        @media (max-width: 768px) {
-            .desktop-hero {
-                display: none;
-            }
-
-            .mobile-hero {
-                display: block;
-            }
-        }
-
-        .slider-wrapper {
-            width: 100%;
-            max-width: 1200px;
-            position: relative;
-            padding: 0 15px;
-        }
-
-        /* Feature Slider */
-        .feature-slider {
-            position: relative;
-            overflow: hidden;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            background-color: rgba(255, 255, 255, 0.03);
-            padding: 30px;
-            /* Added blue border with subtle gradient */
-            border: 1px solid rgba(0, 104, 255, 0.3);
-            /* Added box-shadow for depth with blue glow */
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.4),
-                0 0 0 1px rgba(0, 104, 255, 0.1),
-                0 0 40px rgba(0, 104, 255, 0.1);
-        }
-
-        /* Container blue effect */
-        .feature-slider::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg,
-                    rgba(0, 104, 255, 0.1) 0%,
-                    rgba(0, 104, 255, 0) 50%,
-                    rgba(0, 104, 255, 0.05) 100%);
-            z-index: 0;
-            pointer-events: none;
-            border-radius: 12px;
-        }
-
-        .feature-slider::after {
-            content: '';
-            position: absolute;
-            inset: -20px;
-            background: radial-gradient(circle at center,
-                    rgba(0, 104, 255, 0.2) 0%,
-                    rgba(0, 104, 255, 0) 70%);
-            z-index: -1;
-            filter: blur(20px);
-            opacity: 0.5;
-        }
-
-        .slider-container {
-            display: flex;
-            position: relative;
-            min-height: 500px;
-            z-index: 1;
-            /* Ensure content is above the effects */
-        }
-
-        .slider-item {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            opacity: 0;
-            transform: translateX(100px);
-            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
-            pointer-events: none;
-        }
-
-        .slider-item.active {
-            opacity: 1;
-            transform: translateX(0);
-            pointer-events: all;
-            z-index: 1;
-        }
-
-        .slider-item.prev {
-            opacity: 0;
-            transform: translateX(-100px);
-        }
-
-        .slider-content {
-            width: 50%;
-            padding-right: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .slider-image {
-            width: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border-radius: 10px;
-            position: relative;
-            border: 1px solid rgba(0, 104, 255, 0.3);
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-            background: rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .slider-item:hover .slider-image {
-            border-color: rgba(0, 104, 255, 0.5);
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
-        }
-
-        .slider-image img {
-            width: 100%;
-            height: auto;
-            border-radius: 6px;
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Removed image-specific blue effects */
-
-        .slider-title {
-            font-size: 32px;
-            margin-bottom: 20px;
-            position: relative;
-            padding-bottom: 15px;
-        }
-
-        .slider-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background-color: var(--primary);
-        }
-
-        .slider-description {
-            color: var(--gray-text);
-            font-size: 18px;
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-
-        .slider-button {
-            display: inline-flex;
-            align-items: center;
-            background-color: transparent;
-            color: var(--primary);
-            border: 1px solid var(--primary);
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-        }
-
-        .slider-button:hover {
-            background-color: rgba(0, 104, 255, 0.1);
-            box-shadow: 0 0 15px rgba(0, 104, 255, 0.3);
-        }
-
-        .slider-button svg {
-            margin-left: 8px;
-            transition: transform 0.3s;
-        }
-
-        .slider-button:hover svg {
-            transform: translateX(5px);
-        }
-
-
-        /* Controls */
-        .slider-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 30px;
-            flex-wrap: wrap;
-            position: relative;
-            z-index: 2;
-        }
-
-        .slider-arrows {
-            display: flex;
-            gap: 15px;
-        }
-
-        .slider-arrow {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.05);
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .slider-arrow:hover {
-            background-color: rgba(0, 104, 255, 0.2);
-            box-shadow: 0 0 10px rgba(0, 104, 255, 0.3);
-        }
-
-        .slider-arrow svg {
-            width: 20px;
-            height: 20px;
-            fill: none;
-            stroke: var(--light-text);
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .slider-dots {
-            display: flex;
-        }
-
-        .slider-dots button:not(:last-child) {
-            margin-right: 8px;
-        }
-
-
-        .slider-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-        }
-
-        .slider-dot.active {
-            background-color: var(--primary);
-            transform: scale(1.2);
-            box-shadow: 0 0 10px rgba(0, 104, 255, 0.5);
-        }
-
-        .slider-autoplay {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.05);
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .slider-autoplay:hover {
-            background-color: rgba(0, 104, 255, 0.2);
-            box-shadow: 0 0 10px rgba(0, 104, 255, 0.3);
-        }
-
-        .slider-autoplay svg {
-            width: 20px;
-            height: 20px;
-            fill: none;
-            stroke: var(--light-text);
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .progress-bar {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 3px;
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.1);
-            z-index: 2;
-        }
-
-        .progress {
-            height: 100%;
-            width: 0;
-            background-color: var(--primary);
-            transition: width linear;
-            box-shadow: 0 0 10px rgba(0, 104, 255, 0.5);
-        }
-
-        .w-80per {
-            width: 180px;
-        }
-
-        @media (min-width: 728px) {}
-
-        @media (max-width: 992px) {
-
-            .slider-content {
-                padding-bottom: 20px !important;
-            }
-
-            /* Remove outer padding/margins */
-            .slider-wrapper,
-            .feature-slider {
-                padding: 0;
-                margin: 0;
-            }
-
-            /* Stack and animate slides */
-            .slider-container {
-                position: relative;
-                overflow: hidden;
-                height: 300px;
-            }
-
-            .slider-item {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                pointer-events: none;
-
-                opacity: 0;
-                transform: translateX(20px);
-                transition:
-                    opacity 0.5s ease-in-out,
-                    transform 0.5s ease-in-out;
-
-                /* breathing room under each slide */
-                padding-bottom: 20px;
-            }
-
-            .slider-item.active {
-                opacity: 1;
-                transform: translateX(0);
-                pointer-events: all;
-                z-index: 1;
-            }
-
-            .w-80per {
-                margin: 0 auto;
-                padding-bottom: 20px;
-            }
-
-            .slider-item.prev {
-                transform: translateX(-20px);
-            }
-
-            /* Full-width content and spacing */
-            .slider-title {
-                margin: 0 0 16px;
-            }
-
-            .slider-description {
-                margin: 0 0 16px;
-                width: 100%;
-                padding-top: 20px;
-            }
-
-            .slider-button {
-                margin: 0 0 20px;
-            }
-
-            .slider-content,
-            .slider-image {
-                width: 100%;
-                padding: 0;
-                margin: 0 auto;
-            }
-
-            .slider-image img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                /* crop/center to fill the container */
-            }
-        }
-
-        @media (max-width: 768px) {
-            .feature-slider {
-                padding: 25px 20px;
-            }
-
-            .slider-title {
-                font-size: 24px;
-                margin-bottom: 15px;
-                padding-bottom: 12px;
-            }
-
-            .slider-description {
-                font-size: 15px;
-                margin-bottom: 20px;
-            }
-
-            .slider-controls {
-                gap: 15px;
-                justify-content: center;
-            }
-
-            .slider-dots {
-                order: 0;
-                width: 100%;
-                justify-content: center;
-                margin-bottom: 15px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            body {
-                padding: 10px 0;
-            }
-
-            .feature-slider {
-                padding: 20px 15px;
-                border-radius: 8px;
-            }
-
-            .slider-image {
-                border-radius: 8px;
-                margin-bottom: 20px;
-            }
-
-            .slider-image img {
-                border-radius: 4px;
-            }
-
-            .slider-title {
-                font-size: 22px;
-                margin-bottom: 15px;
-                padding-bottom: 12px;
-            }
-
-            .slider-description {
-                font-size: 14px;
-                margin-bottom: 20px;
-            }
-
-            .slider-button {
-                padding: 8px 16px;
-                font-size: 14px;
-            }
-
-            .slider-controls {
-                margin-top: 20px;
-            }
-
-            .slider-dot {
-                width: 10px;
-                height: 10px;
-            }
-
-            .slider-arrow,
-            .slider-autoplay {
-                width: 36px;
-                height: 36px;
-            }
-
-            .slider-arrow svg,
-            .slider-autoplay svg {
-                width: 18px;
-                height: 18px;
-            }
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        @media (max-width: 768px) {
-            .modal {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.7);
-                z-index: 1000;
-                justify-content: center;
-                align-items: flex-start;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            }
-        }
-
-        .modal.show {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal-content {
-            background-color: transparent;
-            width: 90%;
-            max-width: 800px;
-            height: 90vh;
-            max-height: 800px;
-            position: relative;
-            transform: translateY(20px);
-            opacity: 0;
-            transition: all 0.3s ease;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .modal.show .modal-content {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.5rem;
-            color: white;
-            background-color: rgba(0, 0, 0, 0.5);
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 10;
-            transition: background-color 0.3s ease;
-        }
-
-        .close-modal:hover {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-
-        .iframe-container {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            border-radius: 12px;
-        }
-
-        .iframe-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
-</head>
-
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Trial BlackArrow</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Font Awesome for icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- GSAP for animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="scripts/tailwind-config.js"></script>
+
+<link href="styles/reset.css" rel="stylesheet"/><link href="styles/main.css" rel="stylesheet"/></head>
 <body id="top">
-    <!-- Modal with iframe -->
-    <div id="signupModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">×</span>
-            <div class="iframe-container">
-                <iframe src="https://www.nelogica.com.br/trial-simple?strSlug=profit-frame"
-                    allowfullscreen></iframe>
-            </div>
-        </div>
-    </div>
-
-    <!-- Background Grid -->
-    <div id="home" class="absolute inset-0 bg-grid h-full"></div>
-
-
-    <main>
-        <!-- Hero Section - Completely removed padding at the top -->
-        <section id="topSection" class="relative min-h-screen pb-5 flex items-center justify-center">
-            <div class="max-w-screen-xl w-full px-4 sm:px-6 md:px-12 lg:px-20 mx-auto text-center">
-                <div class="flex flex-col items-center justify-center w-full text-center reveal-from-bottom">
-                    <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/Hierarquia-Nelogica-3.png?v=1745500860877"
-                        alt="Image" class="mx-auto w-full max-w-[180px] sm:max-w-[220px] md:max-w-[260px] pb-6" />
-                    <div class="order-2 md:order-1 flex flex-col items-center">
-                        <div class="ba-logo p-6 md:p-8">
-                            <div class="hero-img w-full max-w-4xl px-4">
-                                <div class="video-container">
-                                    <div class="video-frame">
-                                        <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/desktop%20hero%20img.png?v=1745859600006"
-                                            alt="Desktop Hero"
-                                            class="desktop-hero w-full h-auto max-w-[700px] mx-auto" />
-                                        <img class="mobile-hero w-full h-auto max-w-[375px] mx-auto"
-                                            src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/mobile%20hero%20img.png?v=1745859249233"
-                                            alt="Mobile Hero" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="order-1 md:order-2 flex flex-col items-center">
-                        <div class=" feature-tag pt-6">
-                            <span class="mr-1">✨</span>
+<!-- Modal with iframe -->
+<div class="modal" id="signupModal">
+<div class="modal-content">
+<span class="close-modal">×</span>
+<div class="iframe-container">
+<iframe allowfullscreen="" src="https://www.nelogica.com.br/trial-simple?strSlug=profit-frame"></iframe>
+</div>
+</div>
+</div>
+<!-- Background Grid -->
+<div class="absolute inset-0 bg-grid h-full" id="home"></div>
+<main>
+<!-- Hero Section - Completely removed padding at the top -->
+<section class="relative min-h-screen pb-5 flex items-center justify-center" id="topSection">
+<div class="max-w-screen-xl w-full px-4 sm:px-6 md:px-12 lg:px-20 mx-auto text-center">
+<div class="flex flex-col items-center justify-center w-full text-center reveal-from-bottom">
+<img alt="Image" class="mx-auto w-full max-w-[180px] sm:max-w-[220px] md:max-w-[260px] pb-6" src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/Hierarquia-Nelogica-3.png?v=1745500860877"/>
+<div class="order-2 md:order-1 flex flex-col items-center">
+<div class="ba-logo p-6 md:p-8">
+<div class="hero-img w-full max-w-4xl px-4">
+<div class="video-container">
+<div class="video-frame">
+<img alt="Desktop Hero" class="desktop-hero w-full h-auto max-w-[700px] mx-auto" src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/desktop%20hero%20img.png?v=1745859600006"/>
+<img alt="Mobile Hero" class="mobile-hero w-full h-auto max-w-[375px] mx-auto" src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/mobile%20hero%20img.png?v=1745859249233"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="order-1 md:order-2 flex flex-col items-center">
+<div class="feature-tag pt-6">
+<span class="mr-1">✨</span>
                             Bem-vindo ao BlackArrow
                         </div>
-
-                        <h1
-                            class="text-foreground text-center py-6 text-5xl font-medium tracking-normal sm:text-6xl md:text-7xl lg:text-7xl leading-[1.15] w-full font-heading neon-text">
+<h1 class="text-foreground text-center py-6 text-5xl font-medium tracking-normal sm:text-6xl md:text-7xl lg:text-7xl leading-[1.15] w-full font-heading neon-text">
                             Sua próxima plataforma favorita
                             <span class="text-[#0068ff] inline-block">
                                 de trading está aqui.
                             </span>
-                        </h1>
-
-                        <p class="mb-8 text-lg tracking-tight text-muted-foreground md:text-xl max-w-2xl mx-auto">
+</h1>
+<p class="mb-8 text-lg tracking-tight text-muted-foreground md:text-xl max-w-2xl mx-auto">
                             O problema não é a sua corretora
-                            <br class="md:block">
-                            <span class="md:block"> É a sua plataforma.</span>
-                        </p>
-                        <div class="flex items-center justify-center whitespace-nowrap gap-4 z-10">
-                            <a id="openModalBtn" class="typo-button">
+                            <br class="md:block"/>
+<span class="md:block"> É a sua plataforma.</span>
+</p>
+<div class="flex items-center justify-center whitespace-nowrap gap-4 z-10">
+<a class="typo-button" id="openModalBtn">
                                 Comece agora
                                 <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="relative pt-20 pb-20 md:py-32 px-2 bg-transparent w-full reveal-from-bottom"
-                    id="dashboard-container">
-                    <div
-                        class="absolute md:top-[10%] left-1/2 gradient w-3/4 -translate-x-1/2 h-1/4 md:h-1/3 inset-0 blur-[5rem] animate-image-glow">
-                    </div>
-                    <div
-                        class="dashboard-frame -m-2 rounded-xl p-2 ring-1 ring-inset ring-foreground/20 lg:-m-4 lg:rounded-2xl bg-opacity-50 backdrop-blur-3xl">
-                        <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/dashboard-light.png?v=1745322801269"
-                            alt="Dashboard" class="rounded-md lg:rounded-xl bg-foreground/10 ring-1 ring-border w-full">
-                        <div class="absolute -bottom-4 inset-x-0 w-full h-1/2 bg-gradient-to-t from-background z-10">
-                        </div>
-                        <div
-                            class="absolute bottom-0 md:-bottom-8 inset-x-0 w-full h-1/4 bg-gradient-to-t from-background z-20">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Social Proof Section -->
-        <section class="py-20 pb-40">
-            <div class="max-w-screen-xl mx-auto">
-                <div class="flex flex-col md:flex-row items-center">
-                    <!-- Left side: Text content (50%) -->
-                    <div
-                        class="w-full md:w-1/2 px-4 md:px-8 lg:px-12 flex flex-col justify-center items-center md:items-start text-center md:text-left reveal-from-left">
-                        <div class="feature-tag">
-                            <span class="mr-1">💬</span>
+</a>
+</div>
+</div>
+</div>
+<div class="relative pt-20 pb-20 md:py-32 px-2 bg-transparent w-full reveal-from-bottom" id="dashboard-container">
+<div class="absolute md:top-[10%] left-1/2 gradient w-3/4 -translate-x-1/2 h-1/4 md:h-1/3 inset-0 blur-[5rem] animate-image-glow">
+</div>
+<div class="dashboard-frame -m-2 rounded-xl p-2 ring-1 ring-inset ring-foreground/20 lg:-m-4 lg:rounded-2xl bg-opacity-50 backdrop-blur-3xl">
+<img alt="Dashboard" class="rounded-md lg:rounded-xl bg-foreground/10 ring-1 ring-border w-full" src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/dashboard-light.png?v=1745322801269"/>
+<div class="absolute -bottom-4 inset-x-0 w-full h-1/2 bg-gradient-to-t from-background z-10">
+</div>
+<div class="absolute bottom-0 md:-bottom-8 inset-x-0 w-full h-1/4 bg-gradient-to-t from-background z-20">
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Social Proof Section -->
+<section class="py-20 pb-40">
+<div class="max-w-screen-xl mx-auto">
+<div class="flex flex-col md:flex-row items-center">
+<!-- Left side: Text content (50%) -->
+<div class="w-full md:w-1/2 px-4 md:px-8 lg:px-12 flex flex-col justify-center items-center md:items-start text-center md:text-left reveal-from-left">
+<div class="feature-tag">
+<span class="mr-1">💬</span>
                             Trading de Nova Geração
                         </div>
-                        <h2
-                            class="text-3xl md:text-4xl lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
+<h2 class="text-3xl md:text-4xl lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
                             Confiado por mais de 2M+ traders
                             <span class="text-[#0068ff] inline-block">em todo o mundo.</span>
-                        </h2>
-                        <p class="mt-4 text-lg text-muted-foreground">
+</h2>
+<p class="mt-4 text-lg text-muted-foreground">
                             Descubra por que outros estão escolhendo uma maneira melhor de operar.
 
                         </p>
-                        <a href="#topSection"
-                            class="no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline">
+<a class="no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline" href="#topSection">
                             Não Perca
                             <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-
-                    <!-- Right side: Video (50%, full-width on mobile, border-radius applied) -->
-                    <div class="w-4/5 md:w-2/5 mx-auto md:p-0 mt-8 md:mt-0 reveal-from-right">
-                        <div class="testimonial-video-container">
-                            <video autoplay loop muted playsinline class="testimonial-video w-full h-auto rounded-lg">
-                                <!-- WebM first, for browsers that support it -->
-                                <source
-                                    src="https://downloadserver-cdn.nelogica.com.br/content/site/blackarrow/home/realTraders/home-video2.webm"
-                                    type="video/webm">
-                                <!-- MP4 fallback for Safari/most mobiles -->
-                                <source
-                                    src="https://cdn.glitch.global/dc147a64-5aa0-4203-a261-f712f8734d00/home-video2.mp4?v=1745693189716"
-                                    type="video/mp4">
+</a>
+</div>
+<!-- Right side: Video (50%, full-width on mobile, border-radius applied) -->
+<div class="w-4/5 md:w-2/5 mx-auto md:p-0 mt-8 md:mt-0 reveal-from-right">
+<div class="testimonial-video-container">
+<video autoplay="" class="testimonial-video w-full h-auto rounded-lg" loop="" muted="" playsinline="">
+<!-- WebM first, for browsers that support it -->
+<source src="https://downloadserver-cdn.nelogica.com.br/content/site/blackarrow/home/realTraders/home-video2.webm" type="video/webm"/>
+<!-- MP4 fallback for Safari/most mobiles -->
+<source src="https://cdn.glitch.global/dc147a64-5aa0-4203-a261-f712f8734d00/home-video2.mp4?v=1745693189716" type="video/mp4"/>
                                 Seu navegador não suporta vídeo HTML5.
                             </video>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <div class="max-w-screen-xl mx-auto px-4 md:px-12 lg:px-20">
-            <div class="flex flex-col w-full items-center lg:items-center justify-center py-8 reveal-from-bottom">
-                <div class="feature-tag">
-                    <span class="mr-1">✨</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div class="max-w-screen-xl mx-auto px-4 md:px-12 lg:px-20">
+<div class="flex flex-col w-full items-center lg:items-center justify-center py-8 reveal-from-bottom">
+<div class="feature-tag">
+<span class="mr-1">✨</span>
                     Recursos
                 </div>
-                <h2
-                    class="text-center lg:text-center text-3xl md:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6">
+<h2 class="text-center lg:text-center text-3xl md:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6">
                     Todas as ferramentas. Uma plataforma inteligente.
                 </h2>
-                <p class="mt-4 text-center lg:text-center text-lg text-muted-foreground max-w-lg">
+<p class="mt-4 text-center lg:text-center text-lg text-muted-foreground max-w-lg">
                     Gráficos ilimitados, mais de 100 indicadores e alertas personalizados — tudo projetado para traders que querem mais
                     controle.
                     Construído para mercados globais, automação e decisões mais inteligentes.
 
                 </p>
-            </div>
-
-            <Section class="magic-slider">
-
-                <div class="slider-wrapper">
-                    <div class="feature-slider">
-                        <div class="slider-container">
-                            <!-- Slide 1 -->
-                            <div class="slider-item active" data-index="0">
-                                <div class="slider-content">
-                                    <h3
-                                        class="text-3xl md:text-4xl mb-6 lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
+</div>
+<section class="magic-slider">
+<div class="slider-wrapper">
+<div class="feature-slider">
+<div class="slider-container">
+<!-- Slide 1 -->
+<div class="slider-item active" data-index="0">
+<div class="slider-content">
+<h3 class="text-3xl md:text-4xl mb-6 lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
                                         Gráficos de Próximo Nível</h3>
-                                    <p class="slider-description">Dê vida à sua análise com gráficos poderosos e interativos.
+<p class="slider-description">Dê vida à sua análise com gráficos poderosos e interativos.
                                         Envie ordens diretamente do gráfico, personalize seus indicadores, configure
                                         alertas inteligentes e opere com confiança.
                                     </p>
-                                    <a href="#topSection"
-                                        class="self-start no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline">
+<a class="self-start no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline" href="#topSection">
                                         Não Perca
                                         <i class="fas fa-arrow-right ml-2"></i>
-                                    </a>
-                                </div>
-                                <div class="slider-image">
-                                    <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/powerfulgraphs.png?v=1747070678157"
-                                        alt="Gráficos poderosos">
-                                </div>
-                            </div>
-
-                            <!-- Slide 2 -->
-                            <div class="slider-item" data-index="1">
-                                <div class="slider-content">
-                                    <h3
-                                        class="text-3xl md:text-4xl mb-6 lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
+</a>
+</div>
+<div class="slider-image">
+<img alt="Gráficos poderosos" src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/powerfulgraphs.png?v=1747070678157"/>
+</div>
+</div>
+<!-- Slide 2 -->
+<div class="slider-item" data-index="1">
+<div class="slider-content">
+<h3 class="text-3xl md:text-4xl mb-6 lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
                                         Replay de Mercado
                                     </h3>
-                                    <p class="slider-description">Opere mercados passados como se estivessem ao vivo. Reproduza sessões
+<p class="slider-description">Opere mercados passados como se estivessem ao vivo. Reproduza sessões
                                         completas, teste estratégias e experimente condições em tempo real a qualquer momento.
                                     </p>
-                                    <a href="#topSection"
-                                        class="self-start no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline">
+<a class="self-start no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline" href="#topSection">
                                         Não Perca
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div class="slider-image">
-                                    <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/img-replay.png?v=1747070679485"
-                                        alt="Replay do Mercado">
-                                </div>
-                            </div>
-
-                            <!-- Slide 3 -->
-
-                            <!-- Slide 4 -->
-                            <div class="slider-item" data-index="3">
-                                <div class="slider-content">
-                                    <h3
-                                        class="text-3xl md:text-4xl mb-6 lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
+                                        <svg fill="none" height="16" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+<path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</a>
+</div>
+<div class="slider-image">
+<img alt="Replay do Mercado" src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/img-replay.png?v=1747070679485"/>
+</div>
+</div>
+<!-- Slide 3 -->
+<!-- Slide 4 -->
+<div class="slider-item" data-index="3">
+<div class="slider-content">
+<h3 class="text-3xl md:text-4xl mb-6 lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
                                         Múltiplos Mercados, Uma Plataforma</h3>
-                                    <p class="slider-description">Descubra um mundo de oportunidades de trading. Acesse
+<p class="slider-description">Descubra um mundo de oportunidades de trading. Acesse
                                         múltiplos mercados e tipos de ativos. Tudo o que você precisa para ir mais longe está aqui
                                         mesmo, em um só lugar.
                                     </p>
-                                    <a href="#topSection"
-                                        class="self-start no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline">
+<a class="self-start no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline" href="#topSection">
                                         Não Perca
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div class="slider-image">
-                                    <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/automation.png?v=1747070683210"
-                                        alt="Automação avançada">
-                                </div>
-                            </div>
-
-                            <!-- Slide 5 -->
-                            <div class="slider-item" data-index="4">
-                                <div class="slider-content">
-                                    <h3
-                                        class="text-3xl md:text-4xl mb-6 lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
+                                        <svg fill="none" height="16" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+<path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</a>
+</div>
+<div class="slider-image">
+<img alt="Automação avançada" src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/automation.png?v=1747070683210"/>
+</div>
+</div>
+<!-- Slide 5 -->
+<div class="slider-item" data-index="4">
+<div class="slider-content">
+<h3 class="text-3xl md:text-4xl mb-6 lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
                                         Múltiplos Mercados, Uma Plataforma</h3>
-                                    <p class="slider-description">Descubra um mundo de oportunidades de trading. Acesse
+<p class="slider-description">Descubra um mundo de oportunidades de trading. Acesse
                                         múltiplos mercados e tipos de ativos. Tudo o que você precisa para ir mais longe está aqui
                                         mesmo, em um só lugar.</p>
-                                    <a href="#topSection"
-                                        class="self-start no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline">
+<a class="self-start no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline" href="#topSection">
                                         Não Perca
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div class="slider-image">
-                                    <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/ativos.png?v=1747070685349"
-                                        alt="Milhares de ativos">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="progress-bar">
-                            <div class="progress" id="progress"></div>
-                        </div>
-
-                        <div class="slider-controls">
-                            <div class="slider-dots">
-                                <button class="slider-dot active" data-index="0" aria-label="Ir para slide 1"></button>
-                                <button class="slider-dot" data-index="1" aria-label="Ir para slide 2"></button>
-                                <button class="slider-dot" data-index="2" aria-label="Ir para slide 3"></button>
-                                <button class="slider-dot" data-index="3" aria-label="Ir para slide 4"></button>
-                                <button class="slider-dot" data-index="4" aria-label="Ir para slide 5"></button>
-                            </div>
-
-                            <div class="slider-arrows">
-                                <button class="slider-arrow prev-slide" aria-label="Slide anterior">
-                                    <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/bg-ic.svg?v=1747308673579"
-                                        alt="ícone" class="w-10 h-10" />
-                                </button>
-                                <button class="slider-autoplay" aria-label="Pausar apresentação">
-                                    <img class="pause-icon"
-                                        src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/bg-ic(3).svg?v=1747309335486"
-                                        alt="ícone" class="w-10 h-10" />
-                                    <img class="play-icon"
-                                        src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/bg-ic(2).svg?v=1747309335443"
-                                        alt="ícone" class="w-10 h-10" />
-                                </button>
-                                <button class="slider-arrow next-slide" aria-label="Próximo slide">
-                                    <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/bg-ic(1).svg?v=1747308673203"
-                                        alt="ícone" class="w-10 h-10" />
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </Section>
-
-
-            <!-- Features Section -->
-            <section id="features-2" class="py-20">
-                <div class="max-w-screen-xl mx-auto px-4 md:px-12 lg:px-20 features-6">
-                    <div
-                        class="flex flex-col w-full items-center lg:items-center justify-center py-8 reveal-from-bottom">
-                        <div class="feature-tag">
-                            <span class="mr-1">✨</span>
+                                        <svg fill="none" height="16" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+<path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</a>
+</div>
+<div class="slider-image">
+<img alt="Milhares de ativos" src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/ativos.png?v=1747070685349"/>
+</div>
+</div>
+</div>
+<div class="progress-bar">
+<div class="progress" id="progress"></div>
+</div>
+<div class="slider-controls">
+<div class="slider-dots">
+<button aria-label="Ir para slide 1" class="slider-dot active" data-index="0"></button>
+<button aria-label="Ir para slide 2" class="slider-dot" data-index="1"></button>
+<button aria-label="Ir para slide 3" class="slider-dot" data-index="2"></button>
+<button aria-label="Ir para slide 4" class="slider-dot" data-index="3"></button>
+<button aria-label="Ir para slide 5" class="slider-dot" data-index="4"></button>
+</div>
+<div class="slider-arrows">
+<button aria-label="Slide anterior" class="slider-arrow prev-slide">
+<img alt="ícone" class="w-10 h-10" src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/bg-ic.svg?v=1747308673579">
+</img></button>
+<button aria-label="Pausar apresentação" class="slider-autoplay">
+<img alt="ícone" class="w-10 h-10" src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/bg-ic(3).svg?v=1747309335486">
+<img alt="ícone" class="w-10 h-10" src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/bg-ic(2).svg?v=1747309335443">
+</img></img></button>
+<button aria-label="Próximo slide" class="slider-arrow next-slide">
+<img alt="ícone" class="w-10 h-10" src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/bg-ic(1).svg?v=1747308673203">
+</img></button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Section -->
+<section class="py-20" id="features-2">
+<div class="max-w-screen-xl mx-auto px-4 md:px-12 lg:px-20 features-6">
+<div class="flex flex-col w-full items-center lg:items-center justify-center py-8 reveal-from-bottom">
+<div class="feature-tag">
+<span class="mr-1">✨</span>
                             Recursos
                         </div>
-                        <h2
-                            class="text-center lg:text-center text-3xl md:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
+<h2 class="text-center lg:text-center text-3xl md:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
                             Seção 2
                         </h2>
-                        <p class="mt-4 text-center lg:text-center text-lg text-muted-foreground max-w-lg">
+<p class="mt-4 text-center lg:text-center text-lg text-muted-foreground max-w-lg">
                             Ainda não é um trader? Estes são os motivos pelos quais você deveria considerar se tornar um:
                         </p>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-12" id="features-grid-2">
-                        <!-- Update the magic cards in the second features section to also have background images -->
-                        <!-- Feature 1 -->
-                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
-                            <div class="flex flex-col items-start justify-center w-full">
-                                <i class="fas fa-link text-2xl text-foreground"></i>
-                                <div class="flex flex-col relative items-start mt-6">
-                                    <h3 class="text-base font-medium text-foreground">Liberdade para decidir quando e onde
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-12" id="features-grid-2">
+<!-- Update the magic cards in the second features section to also have background images -->
+<!-- Feature 1 -->
+<div class="magic-card group" style="--x: 50%; --y: 50%;">
+<div class="flex flex-col items-start justify-center w-full">
+<i class="fas fa-link text-2xl text-foreground"></i>
+<div class="flex flex-col relative items-start mt-6">
+<h3 class="text-base font-medium text-foreground">Liberdade para decidir quando e onde
                                         você opera.</h3>
-                                    <p class="mt-2 text-sm text-muted-foreground">O trading oferece a flexibilidade para
+<p class="mt-2 text-sm text-muted-foreground">O trading oferece a flexibilidade para
                                         definir seu próprio horário e trabalhar de qualquer lugar — sem necessidade de um emprego tradicional.</p>
-                                </div>
-                            </div>
-                            <div class="bento-card-background"></div>
-                        </div>
-
-                        <!-- Feature 2 -->
-                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
-                            <div class="flex flex-col items-start justify-center w-full">
-                                <i class="fas fa-chart-line text-2xl text-foreground"></i>
-                                <div class="flex flex-col relative items-start mt-6">
-                                    <h3 class="text-base font-medium text-foreground">Mercados abertos 24/5 — encaixe o trading
+</div>
+</div>
+<div class="bento-card-background"></div>
+</div>
+<!-- Feature 2 -->
+<div class="magic-card group" style="--x: 50%; --y: 50%;">
+<div class="flex flex-col items-start justify-center w-full">
+<i class="fas fa-chart-line text-2xl text-foreground"></i>
+<div class="flex flex-col relative items-start mt-6">
+<h3 class="text-base font-medium text-foreground">Mercados abertos 24/5 — encaixe o trading
                                         na sua vida.</h3>
-                                    <p class="mt-2 text-sm text-muted-foreground">Os mercados globais funcionam quase sem parar, então
+<p class="mt-2 text-sm text-muted-foreground">Os mercados globais funcionam quase sem parar, então
                                         você pode operar nos horários que melhor se adaptam à sua rotina e estilo de vida.</p>
-                                </div>
-                            </div>
-                            <div class="bento-card-background"></div>
-                        </div>
-
-                        <!-- Feature 3 -->
-                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
-                            <div class="flex flex-col items-start justify-center w-full">
-                                <i class="fas fa-lock text-2xl text-foreground"></i>
-                                <div class="flex flex-col relative items-start mt-6">
-                                    <h3 class="text-base font-medium text-foreground">A chance de construir uma fonte extra
+</div>
+</div>
+<div class="bento-card-background"></div>
+</div>
+<!-- Feature 3 -->
+<div class="magic-card group" style="--x: 50%; --y: 50%;">
+<div class="flex flex-col items-start justify-center w-full">
+<i class="fas fa-lock text-2xl text-foreground"></i>
+<div class="flex flex-col relative items-start mt-6">
+<h3 class="text-base font-medium text-foreground">A chance de construir uma fonte extra
                                         de renda.</h3>
-                                    <p class="mt-2 text-sm text-muted-foreground">Comece pequeno, cresça constantemente e trabalhe
+<p class="mt-2 text-sm text-muted-foreground">Comece pequeno, cresça constantemente e trabalhe
                                         em direção aos seus objetivos financeiros, um passo de cada vez.</p>
-                                </div>
-                            </div>
-                            <div class="bento-card-background"></div>
-                        </div>
-
-                        <!-- Feature 4 -->
-                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
-                            <div class="flex flex-col items-start justify-center w-full">
-                                <i class="fas fa-qrcode text-2xl text-foreground"></i>
-                                <div class="flex flex-col relative items-start mt-6">
-                                    <h3 class="text-base font-medium text-foreground">Códigos QR personalizados</h3>
-                                    <p class="mt-2 text-sm text-muted-foreground">Gere códigos QR personalizados para seus
+</div>
+</div>
+<div class="bento-card-background"></div>
+</div>
+<!-- Feature 4 -->
+<div class="magic-card group" style="--x: 50%; --y: 50%;">
+<div class="flex flex-col items-start justify-center w-full">
+<i class="fas fa-qrcode text-2xl text-foreground"></i>
+<div class="flex flex-col relative items-start mt-6">
+<h3 class="text-base font-medium text-foreground">Códigos QR personalizados</h3>
+<p class="mt-2 text-sm text-muted-foreground">Gere códigos QR personalizados para seus
                                         links.
                                     </p>
-                                </div>
-                            </div>
-                            <div class="bento-card-background"></div>
-                        </div>
-
-                        <!-- Feature 5 -->
-                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
-                            <div class="flex flex-col items-start justify-center w-full">
-                                <i class="fas fa-clock text-2xl text-foreground"></i>
-                                <div class="flex flex-col relative items-start mt-6">
-                                    <h3 class="text-base font-medium text-foreground">Expiração de links</h3>
-                                    <p class="mt-2 text-sm text-muted-foreground">Defina uma data de expiração para seus links.
+</div>
+</div>
+<div class="bento-card-background"></div>
+</div>
+<!-- Feature 5 -->
+<div class="magic-card group" style="--x: 50%; --y: 50%;">
+<div class="flex flex-col items-start justify-center w-full">
+<i class="fas fa-clock text-2xl text-foreground"></i>
+<div class="flex flex-col relative items-start mt-6">
+<h3 class="text-base font-medium text-foreground">Expiração de links</h3>
+<p class="mt-2 text-sm text-muted-foreground">Defina uma data de expiração para seus links.
                                     </p>
-                                </div>
-                            </div>
-                            <div class="bento-card-background"></div>
-                        </div>
-
-                        <!-- Feature 6 -->
-                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
-                            <div class="flex flex-col items-start justify-center w-full">
-                                <i class="fas fa-users text-2xl text-foreground"></i>
-                                <div class="flex flex-col relative items-start mt-6">
-                                    <h3 class="text-base font-medium text-foreground">Colaboração em equipe</h3>
-                                    <p class="mt-2 text-sm text-muted-foreground">Compartilhe links com sua equipe e
+</div>
+</div>
+<div class="bento-card-background"></div>
+</div>
+<!-- Feature 6 -->
+<div class="magic-card group" style="--x: 50%; --y: 50%;">
+<div class="flex flex-col items-start justify-center w-full">
+<i class="fas fa-users text-2xl text-foreground"></i>
+<div class="flex flex-col relative items-start mt-6">
+<h3 class="text-base font-medium text-foreground">Colaboração em equipe</h3>
+<p class="mt-2 text-sm text-muted-foreground">Compartilhe links com sua equipe e
                                         colabore em tempo real.</p>
-                                </div>
-                            </div>
-                            <div class="bento-card-background"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Process Section -->
-            <section class="py-40 pb-20">
-                <div class="max-w-screen-xl mx-auto px-4 md:px-12 lg:px-20">
-                    <div
-                        class="flex flex-col items-center lg:items-center justify-center w-full py-8 max-w-xl mx-auto reveal-from-bottom">
-                        <div class="feature-tag">
-                            <span class="mr-1">🔄</span>
+</div>
+</div>
+<div class="bento-card-background"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Process Section -->
+<section class="py-40 pb-20">
+<div class="max-w-screen-xl mx-auto px-4 md:px-12 lg:px-20">
+<div class="flex flex-col items-center lg:items-center justify-center w-full py-8 max-w-xl mx-auto reveal-from-bottom">
+<div class="feature-tag">
+<span class="mr-1">🔄</span>
                             O Processo
                         </div>
-                        <h2
-                            class="text-center lg:text-center text-3xl md:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
+<h2 class="text-center lg:text-center text-3xl md:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
                             Faça a mudança que seu futuro eu agradecerá
                         </h2>
-                        <p class="mt-4 text-center lg:text-center text-lg text-muted-foreground max-w-lg">
+<p class="mt-4 text-center lg:text-center text-lg text-muted-foreground max-w-lg">
                             Ainda não é um trader? Estes são os motivos pelos quais você deveria considerar se tornar um.
                         </p>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full py-8 gap-4 md:gap-8"
-                        id="process-grid">
-                        <!-- Update the process section cards to also have background images -->
-                        <!-- Step 1 -->
-                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
-                            <div class="flex flex-col items-start justify-center w-full">
-                                <i class="fas fa-wand-magic-sparkles text-2xl text-foreground"></i>
-                                <div class="flex flex-col relative items-start">
-                                    <span
-                                        class="absolute -top-6 right-0 border-2 border-border text-foreground font-medium text-2xl rounded-full w-12 h-12 flex items-center justify-center pt-0.5 animate-pulse">1</span>
-                                    <h3 class="text-base mt-6 font-medium text-foreground">Liberdade para decidir quando e
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full py-8 gap-4 md:gap-8" id="process-grid">
+<!-- Update the process section cards to also have background images -->
+<!-- Step 1 -->
+<div class="magic-card group" style="--x: 50%; --y: 50%;">
+<div class="flex flex-col items-start justify-center w-full">
+<i class="fas fa-wand-magic-sparkles text-2xl text-foreground"></i>
+<div class="flex flex-col relative items-start">
+<span class="absolute -top-6 right-0 border-2 border-border text-foreground font-medium text-2xl rounded-full w-12 h-12 flex items-center justify-center pt-0.5 animate-pulse">1</span>
+<h3 class="text-base mt-6 font-medium text-foreground">Liberdade para decidir quando e
                                         onde você opera.</h3>
-                                    <p class="mt-2 text-sm text-muted-foreground">O trading oferece a flexibilidade para
+<p class="mt-2 text-sm text-muted-foreground">O trading oferece a flexibilidade para
                                         definir seu próprio horário e trabalhar de qualquer lugar — sem necessidade de um emprego tradicional.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Step 2 -->
-                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
-                            <div class="flex flex-col items-start justify-center w-full">
-                                <i class="fas fa-calendar text-2xl text-foreground"></i>
-                                <div class="flex flex-col relative items-start">
-                                    <span
-                                        class="absolute -top-6 right-0 border-2 border-border text-foreground font-medium text-2xl rounded-full w-12 h-12 flex items-center justify-center pt-0.5 animate-pulse">2</span>
-                                    <h3 class="text-base mt-6 font-medium text-foreground">Mercados abertos 24/5 — encaixe
+</div>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="magic-card group" style="--x: 50%; --y: 50%;">
+<div class="flex flex-col items-start justify-center w-full">
+<i class="fas fa-calendar text-2xl text-foreground"></i>
+<div class="flex flex-col relative items-start">
+<span class="absolute -top-6 right-0 border-2 border-border text-foreground font-medium text-2xl rounded-full w-12 h-12 flex items-center justify-center pt-0.5 animate-pulse">2</span>
+<h3 class="text-base mt-6 font-medium text-foreground">Mercados abertos 24/5 — encaixe
                                         o trading na sua vida.</h3>
-                                    <p class="mt-2 text-sm text-muted-foreground">Os mercados globais funcionam quase sem parar, então
+<p class="mt-2 text-sm text-muted-foreground">Os mercados globais funcionam quase sem parar, então
                                         você pode operar nos horários que melhor se adaptam à sua rotina e estilo de vida.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Step 3 -->
-                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
-                            <div class="flex flex-col items-start justify-center w-full">
-                                <i class="fas fa-money-bill-trend-up text-2xl text-foreground"></i>
-                                <div class="flex flex-col relative items-start">
-                                    <span
-                                        class="absolute -top-6 right-0 border-2 border-border text-foreground font-medium text-2xl rounded-full w-12 h-12 flex items-center justify-center pt-0.5 animate-pulse">3</span>
-                                    <h3 class="text-base mt-6 font-medium text-foreground">A chance de construir uma fonte extra
+</div>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="magic-card group" style="--x: 50%; --y: 50%;">
+<div class="flex flex-col items-start justify-center w-full">
+<i class="fas fa-money-bill-trend-up text-2xl text-foreground"></i>
+<div class="flex flex-col relative items-start">
+<span class="absolute -top-6 right-0 border-2 border-border text-foreground font-medium text-2xl rounded-full w-12 h-12 flex items-center justify-center pt-0.5 animate-pulse">3</span>
+<h3 class="text-base mt-6 font-medium text-foreground">A chance de construir uma fonte extra
                                         de renda.</h3>
-                                    <p class="mt-2 text-sm text-muted-foreground">Comece pequeno, cresça constantemente e trabalhe
+<p class="mt-2 text-sm text-muted-foreground">Comece pequeno, cresça constantemente e trabalhe
                                         em direção aos seus objetivos financeiros, um passo de cada vez.
                                     </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Social Proof Section -->
-            <section class="pt-20">
-                <div class="max-w-screen-xl mx-auto">
-                    <div class="flex flex-col md:flex-row">
-                        <!-- Left side: Text content (smaller) -->
-                        <div
-                            class="w-full md:w-1/3 px-4 md:px-8 lg:px-12 flex flex-col items-center md:items-start text-center md:text-left reveal-from-left">
-                            <div class="feature-tag">
-                                <span class="mr-1">💬</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Social Proof Section -->
+<section class="pt-20">
+<div class="max-w-screen-xl mx-auto">
+<div class="flex flex-col md:flex-row">
+<!-- Left side: Text content (smaller) -->
+<div class="w-full md:w-1/3 px-4 md:px-8 lg:px-12 flex flex-col items-center md:items-start text-center md:text-left reveal-from-left">
+<div class="feature-tag">
+<span class="mr-1">💬</span>
                                 Depoimentos
                             </div>
-                            <h2
-                                class="text-3xl md:text-4xl lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
+<h2 class="text-3xl md:text-4xl lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
                                 Veja o que outros traders
                                 <span class="text-[#0068ff] inline-block">estão dizendo.</span>
-                            </h2>
-                            <p class="mt-4 text-lg text-muted-foreground">
+</h2>
+<p class="mt-4 text-lg text-muted-foreground">
                                 Sua jornada de trading pode começar hoje — por que esperar?
                             </p>
-                            <a href="#topSection"
-                                class="no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline">
+<a class="no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline" href="#topSection">
                                 Não Perca
                                 <i class="fas fa-arrow-right ml-2"></i>
-                            </a>
-                        </div>
-
-                        <!-- Right side: Image (larger, full-width, no padding) -->
-                        <div class="w-full md:w-1/3 md:p-0 mt-8 md:mt-0 reveal-from-right">
-                            <!-- Desktop image -->
-                            <div class="hidden md:block testimonial-image-container">
-                                <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/BA_Prova-Social%20br%20new.png?v=1747746364257"
-                                    alt="BlackArrow Depoimentos" class="testimonial-image w-full h-auto" />
-                            </div>
-
-                            <!-- Mobile image -->
-                            <div
-                                class="block md:hidden relative left-1/2 right-1/2 -translate-x-1/2 w-screen overflow-hidden">
-                                <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/BA_Prova-Social%20br%20new.png?v=1747746364257"
-                                    alt="BlackArrow Depoimentos" class="w-full h-auto" />
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </section>
-
-
-            <!-- Pricing Section -->
-
-            <!-- CTA Section -->
-
-    </main>
-
-    <script>
-        gsap.registerPlugin(ScrollTrigger);
-
-        document.addEventListener('DOMContentLoaded', function () {
-
-
-            // === Scroll reveal animations ===
-            function initScrollAnimations() {
-                const createSequence = (selector, container) => {
-                    const elements = document.querySelectorAll(selector);
-
-                    const sortedElements = Array.from(elements).sort((a, b) => {
-                        const aRect = a.getBoundingClientRect();
-                        const bRect = b.getBoundingClientRect();
-                        if (Math.abs(aRect.top - bRect.top) < 50) {
-                            return aRect.left - bRect.left;
-                        }
-                        return aRect.top - bRect.top;
-                    });
-
-                    sortedElements.forEach((element, index) => {
-                        gsap.fromTo(element,
-                            {
-                                y: element.classList.contains('reveal-from-bottom') ? 30 : 0,
-                                x: element.classList.contains('reveal-from-left') ? -30 : element.classList.contains('reveal-from-right') ? 30 : 0,
-                                opacity: 0,
-                                filter: "blur(8px)"
-                            },
-                            {
-                                y: 0,
-                                x: 0,
-                                opacity: 1,
-                                filter: "blur(0px)",
-                                duration: 0.5,
-                                delay: index * 0.05,
-                                ease: "power3.out",
-                                scrollTrigger: {
-                                    trigger: container || element,
-                                    start: "top 85%",
-                                    toggleActions: "play none none none"
-                                }
-                            }
-                        );
-                    });
-                };
-
-                createSequence('.reveal-from-bottom, .reveal-from-left, .reveal-from-right');
-                createSequence('#features-grid-2 .magic-card', '#features-grid-2');
-                createSequence('#process-grid .magic-card', '#process-grid');
-                createSequence('#features-grid .bento-card', '#features-grid');
-            }
-
-            initScrollAnimations();
-
-            // === Dashboard frame neon effect ===
-            function initDashboardAnimation() {
-                const dashboardFrame = document.querySelector('.dashboard-frame');
-                if (!dashboardFrame) return;
-
-                setTimeout(() => {
-                    dashboardFrame.classList.add('active');
-                }, 1000);
-
-                gsap.to(dashboardFrame, {
-                    boxShadow: '0 0 20px rgba(0, 104, 255, 0.4)',
-                    duration: 2,
-                    repeat: -1,
-                    yoyo: true,
-                    ease: "sine.inOut"
-                });
-            }
-
-            initDashboardAnimation();
-
-            // === Magic card hover effect ===
-            document.querySelectorAll('.magic-card').forEach(card => {
-                card.addEventListener('mousemove', e => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    card.style.setProperty('--x', `${x}px`);
-                    card.style.setProperty('--y', `${y}px`);
-                });
-            });
-
-            // === Bento card hover effect ===
-            document.querySelectorAll('.bento-card').forEach(card => {
-                card.addEventListener('mousemove', e => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-
-                    card.style.setProperty('--x', `${x}px`);
-                    card.style.setProperty('--y', `${y}px`);
-
-                    const opacityBase = 0.75;
-                    const opacityBoost = 0.25;
-                    const opacityX = x / rect.width;
-                    const opacityY = 1 - (y / rect.height);
-                    const diagonalPosition = (opacityX + opacityY) / 2;
-                    const newOpacity = opacityBase + (diagonalPosition * opacityBoost);
-
-                    const background = card.querySelector('.bento-card-background');
-                    if (background) {
-                        background.style.opacity = newOpacity.toString();
-                        if (card.classList.contains('small-card')) {
-                            background.style.transform = `scale(${1.05 + diagonalPosition * 0.1})`;
-                        } else {
-                            background.style.transform = `translateX(0px)`;
-                        }
-                    }
-                });
-
-                card.addEventListener('mouseleave', e => {
-                    const background = card.querySelector('.bento-card-background');
-                    if (background) {
-                        background.style.opacity = '0.75';
-                        if (card.classList.contains('small-card')) {
-                            background.style.transform = 'scale(1.05)';
-                        } else if (card.classList.contains('large-card')) {
-                            background.style.transform = 'translateX(0)';
-                        }
-                    }
-                });
-            });
-
-            // === Fill background images into bento cards ===
-            const cards = document.querySelectorAll('.bento-card');
-            cards.forEach(card => {
-                const background = card.getAttribute('data-background');
-                if (background) {
-                    const backgroundElement = card.querySelector('.bento-card-background');
-                    if (backgroundElement) {
-                        backgroundElement.style.backgroundImage = background;
-                    }
-                }
-            });
-
-        });
-
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const sliderItems = document.querySelectorAll('.slider-item');
-            const sliderDots = document.querySelectorAll('.slider-dot');
-            const prevButton = document.querySelector('.prev-slide');
-            const nextButton = document.querySelector('.next-slide');
-            const autoplayButton = document.querySelector('.slider-autoplay');
-            const pauseIcon = document.querySelector('.pause-icon');
-            const playIcon = document.querySelector('.play-icon');
-            const progressBar = document.getElementById('progress');
-
-            let currentIndex = 0;
-            let interval;
-            let isPlaying = true;
-            const slideDuration = 5000; // 5 seconds per slide
-            let animationStartTime;
-
-            // Function to update progress bar
-            function updateProgressBar(timestamp) {
-                if (!animationStartTime) animationStartTime = timestamp;
-                if (!isPlaying) return;
-
-                const elapsed = timestamp - animationStartTime;
-                const progress = Math.min(elapsed / slideDuration * 100, 100);
-                progressBar.style.width = `${progress}%`;
-
-                if (elapsed < slideDuration) {
-                    requestAnimationFrame(updateProgressBar);
-                } else {
-                    // Move to next slide when progress is complete
-                    goToNextSlide();
-                }
-            }
-
-            // Function to change slide
-            function changeSlide(index) {
-                // Handle previous slide class
-                sliderItems[currentIndex].classList.remove('active');
-                sliderItems[currentIndex].classList.add('prev');
-
-                // Remove active class from all slides and dots
-                setTimeout(() => {
-                    sliderItems.forEach(item => item.classList.remove('prev'));
-                }, 500);
-
-                sliderDots.forEach(dot => dot.classList.remove('active'));
-
-                // Add active class to current slide and dot
-                sliderItems[index].classList.add('active');
-                sliderDots[index].classList.add('active');
-
-                currentIndex = index;
-
-                // Reset and start progress bar
-                progressBar.style.width = '0%';
-                animationStartTime = null;
-                if (isPlaying) {
-                    requestAnimationFrame(updateProgressBar);
-                }
-            }
-
-            // Function to go to next slide
-            function goToNextSlide() {
-                let nextIndex = (currentIndex + 1) % sliderItems.length;
-                changeSlide(nextIndex);
-            }
-
-            // Function to go to previous slide
-            function goToPrevSlide() {
-                let prevIndex = (currentIndex - 1 + sliderItems.length) % sliderItems.length;
-                changeSlide(prevIndex);
-            }
-
-            // Start automatic slideshow
-            function startSlideshow() {
-                isPlaying = true;
-                pauseIcon.style.display = 'block';
-                playIcon.style.display = 'none';
-                requestAnimationFrame(updateProgressBar);
-            }
-
-            // Pause slideshow
-            function pauseSlideshow() {
-                isPlaying = false;
-                pauseIcon.style.display = 'none';
-                playIcon.style.display = 'block';
-            }
-
-            // Add click event to dots
-            sliderDots.forEach(dot => {
-                dot.addEventListener('click', function () {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    changeSlide(index);
-                });
-            });
-
-            // Add click event to prev button
-            prevButton.addEventListener('click', function () {
-                goToPrevSlide();
-            });
-
-            // Add click event to next button
-            nextButton.addEventListener('click', function () {
-                goToNextSlide();
-            });
-
-            // Add click event to autoplay button
-            autoplayButton.addEventListener('click', function () {
-                if (isPlaying) {
-                    pauseSlideshow();
-                } else {
-                    startSlideshow();
-                }
-            });
-
-            // Add keyboard navigation
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'ArrowLeft') {
-                    goToPrevSlide();
-                } else if (e.key === 'ArrowRight') {
-                    goToNextSlide();
-                } else if (e.key === ' ') {
-                    // Space bar toggles play/pause
-                    if (isPlaying) {
-                        pauseSlideshow();
-                    } else {
-                        startSlideshow();
-                    }
-                    e.preventDefault(); // Prevent page scrolling on space
-                }
-            });
-
-            // Add touch support
-            let touchStartX = 0;
-            let touchEndX = 0;
-
-            const slider = document.querySelector('.feature-slider');
-
-            slider.addEventListener('touchstart', function (e) {
-                touchStartX = e.changedTouches[0].screenX;
-            }, { passive: true });
-
-            slider.addEventListener('touchend', function (e) {
-                touchEndX = e.changedTouches[0].screenX;
-                handleSwipe();
-            }, { passive: true });
-
-            function handleSwipe() {
-                const swipeThreshold = 50;
-                if (touchEndX < touchStartX - swipeThreshold) {
-                    // Swipe left, go to next slide
-                    goToNextSlide();
-                } else if (touchEndX > touchStartX + swipeThreshold) {
-                    // Swipe right, go to previous slide
-                    goToPrevSlide();
-                }
-            }
-
-            // Start the slideshow
-            startSlideshow();
-
-            // Pause slideshow when tab is not visible
-            document.addEventListener('visibilitychange', function () {
-                if (document.hidden) {
-                    pauseSlideshow();
-                } else if (!document.hidden && isPlaying) {
-                    startSlideshow();
-                }
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const sliderItems = document.querySelectorAll('.slider-item');
-            const sliderDots = document.querySelectorAll('.slider-dot');
-            const prevButton = document.querySelector('.prev-slide');
-            const nextButton = document.querySelector('.next-slide');
-            const autoplayButton = document.querySelector('.slider-autoplay');
-            const pauseIcon = document.querySelector('.pause-icon');
-            const playIcon = document.querySelector('.play-icon');
-            const progressBar = document.getElementById('progress');
-
-            let currentIndex = 0;
-            let isPlaying = true;
-            const slideDuration = 5000;
-            let animationStartTime;
-
-            function updateProgressBar(timestamp) {
-                if (!animationStartTime) animationStartTime = timestamp;
-                if (!isPlaying) return;
-
-                const elapsed = timestamp - animationStartTime;
-                const progress = Math.min(elapsed / slideDuration * 100, 100);
-                progressBar.style.width = `${progress}%`;
-
-                if (elapsed < slideDuration) {
-                    requestAnimationFrame(updateProgressBar);
-                } else {
-                    goToNextSlide();
-                }
-            }
-
-            function changeSlide(index) {
-                const isMobile = window.innerWidth <= 992;
-                sliderItems[currentIndex].classList.remove('active');
-                if (!isMobile) {
-                    sliderItems[currentIndex].classList.add('prev');
-                }
-                setTimeout(() => {
-                    sliderItems.forEach(item => item.classList.remove('prev'));
-                }, 500);
-
-                sliderDots.forEach(dot => dot.classList.remove('active'));
-                sliderItems[index].classList.add('active');
-                sliderDots[index].classList.add('active');
-
-                currentIndex = index;
-                progressBar.style.width = '0%';
-                animationStartTime = null;
-                if (isPlaying) requestAnimationFrame(updateProgressBar);
-            }
-
-            function goToNextSlide() {
-                let nextIndex = (currentIndex + 1) % sliderItems.length;
-                changeSlide(nextIndex);
-            }
-
-            function goToPrevSlide() {
-                let prevIndex = (currentIndex - 1 + sliderItems.length) % sliderItems.length;
-                changeSlide(prevIndex);
-            }
-
-            function startSlideshow() {
-                isPlaying = true;
-                pauseIcon.style.display = 'block';
-                playIcon.style.display = 'none';
-                requestAnimationFrame(updateProgressBar);
-            }
-
-            function pauseSlideshow() {
-                isPlaying = false;
-                pauseIcon.style.display = 'none';
-                playIcon.style.display = 'block';
-            }
-
-            sliderDots.forEach(dot => {
-                dot.addEventListener('click', function () {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    changeSlide(index);
-                });
-            });
-
-            prevButton.addEventListener('click', goToPrevSlide);
-            nextButton.addEventListener('click', goToNextSlide);
-
-            autoplayButton.addEventListener('click', function () {
-                if (isPlaying) {
-                    pauseSlideshow();
-                } else {
-                    startSlideshow();
-                }
-            });
-
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'ArrowLeft') goToPrevSlide();
-                else if (e.key === 'ArrowRight') goToNextSlide();
-                else if (e.key === ' ') {
-                    if (isPlaying) pauseSlideshow();
-                    else startSlideshow();
-                    e.preventDefault();
-                }
-            });
-
-            let touchStartX = 0;
-            let touchEndX = 0;
-            const slider = document.querySelector('.feature-slider');
-
-            slider.addEventListener('touchstart', function (e) {
-                touchStartX = e.changedTouches[0].screenX;
-            }, { passive: true });
-
-            slider.addEventListener('touchend', function (e) {
-                touchEndX = e.changedTouches[0].screenX;
-                handleSwipe();
-            }, { passive: true });
-
-            function handleSwipe() {
-                const swipeThreshold = 50;
-                if (touchEndX < touchStartX - swipeThreshold) goToNextSlide();
-                else if (touchEndX > touchStartX + swipeThreshold) goToPrevSlide();
-            }
-
-            function handleResize() {
-                if (window.innerWidth <= 992) {
-                    document.querySelector('.slider-container').style.height = 'auto';
-                }
-            }
-
-            window.addEventListener('resize', handleResize);
-            handleResize();
-
-            startSlideshow();
-
-            document.addEventListener('visibilitychange', function () {
-                if (document.hidden) pauseSlideshow();
-                else if (!document.hidden && isPlaying) startSlideshow();
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const modal = document.getElementById('signupModal');
-            const openBtn = document.getElementById('openModalBtn');
-            const closeBtn = modal.querySelector('.close-modal');
-
-            openBtn?.addEventListener('click', () => {
-                modal.classList.add('show');
-            });
-
-            closeBtn?.addEventListener('click', () => {
-                modal.classList.remove('show');
-            });
-
-            // Optional: close when clicking outside modal content
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.remove('show');
-                }
-            });
-        });
-    </script>
-
-<!-- Code injected by live-server -->
-<script>
-	// <![CDATA[  <-- For SVG support
-	if ('WebSocket' in window) {
-		(function () {
-			function refreshCSS() {
-				var sheets = [].slice.call(document.getElementsByTagName("link"));
-				var head = document.getElementsByTagName("head")[0];
-				for (var i = 0; i < sheets.length; ++i) {
-					var elem = sheets[i];
-					var parent = elem.parentElement || head;
-					parent.removeChild(elem);
-					var rel = elem.rel;
-					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
-						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
-					}
-					parent.appendChild(elem);
-				}
-			}
-			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-			var address = protocol + window.location.host + window.location.pathname + '/ws';
-			var socket = new WebSocket(address);
-			socket.onmessage = function (msg) {
-				if (msg.data == 'reload') window.location.reload();
-				else if (msg.data == 'refreshcss') refreshCSS();
-			};
-			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
-				console.log('Live reload enabled.');
-				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-			}
-		})();
-	}
-	else {
-		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
-	}
-	// ]]>
-</script>
-</body>
-
-
+</a>
+</div>
+<!-- Right side: Image (larger, full-width, no padding) -->
+<div class="w-full md:w-1/3 md:p-0 mt-8 md:mt-0 reveal-from-right">
+<!-- Desktop image -->
+<div class="hidden md:block testimonial-image-container">
+<img alt="BlackArrow Depoimentos" class="testimonial-image w-full h-auto" src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/BA_Prova-Social%20br%20new.png?v=1747746364257">
+</img></div>
+<!-- Mobile image -->
+<div class="block md:hidden relative left-1/2 right-1/2 -translate-x-1/2 w-screen overflow-hidden">
+<img alt="BlackArrow Depoimentos" class="w-full h-auto" src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/BA_Prova-Social%20br%20new.png?v=1747746364257"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing Section -->
+<!-- CTA Section -->
+</div></main>
+
+
+<script src="scripts/main.js"></script></body>
 </html>
