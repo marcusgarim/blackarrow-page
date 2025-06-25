@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trial BlackArrow</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        border: 'hsl(216 100% 20%)',
+                        background: 'hsl(216 100% 5%)',
+                        foreground: 'hsl(0 0% 98%)',
+                        primary: '#0068ff',
+                        'primary-foreground': 'hsl(0 0% 100%)',
+                        secondary: '#0068ff',
+                        'secondary-foreground': 'hsl(0 0% 100%)',
+                        muted: 'hsl(216 100% 15%)',
+                        'muted-foreground': 'hsl(216 20% 70%)',
+                        accent: '#0068ff',
+                        'accent-foreground': 'hsl(0 0% 100%)',
+                    },
+                    fontFamily: {
+                        sans: ['Archivo', 'sans-serif'],
+                        heading: ['Archivo', 'sans-serif'],
+                    },
+                    animation: {
+                        'image-glow': 'image-glow 4s ease-out 0.6s forwards',
+                    },
+                    keyframes: {
+                        'image-glow': {
+                            '0%': {
+                                opacity: '0',
+                                'animation-timing-function': 'cubic-bezier(.74, .25, .76, 1)',
+                            },
+                            '10%': {
+                                opacity: '0.5',
+                                'animation-timing-function': 'cubic-bezier(.12, .01, .08, .99)',
+                            },
+                            '100%': { opacity: '0.7' },
+                        },
+                    },
+                },
+            },
+        }
+
+    </script>
+</head>
+
+<body id="top">
+    <!-- Modal with iframe -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">×</span>
+            <div class="iframe-container">
+                <iframe src="https://www.nelogica.com.br/trial-simple?strSlug=profit-frame"
+                    allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Grid -->
+    <div id="home" class="absolute inset-0 bg-grid h-full"></div>
+
+
+    <main>
+        <!-- Hero Section - Completely removed padding at the top -->
+        <section id="topSection" class="relative min-h-screen pb-5 flex items-center justify-center">
+            <div class="max-w-screen-xl w-full px-4 sm:px-6 md:px-12 lg:px-20 mx-auto text-center">
+                <div class="flex flex-col items-center justify-center w-full text-center reveal-from-bottom">
+                    <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/Hierarquia-Nelogica-3.png?v=1745500860877"
+                        alt="Image" class="mx-auto w-full max-w-[180px] sm:max-w-[220px] md:max-w-[260px] pb-6" />
+                    <div class="order-2 md:order-1 flex flex-col items-center">
+                        <div class="ba-logo p-6 md:p-8">
+                            <div class="hero-img w-full max-w-4xl px-4">
+                                <div class="video-container">
+                                    <div class="video-frame">
+                                        <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/desktop%20hero%20img.png?v=1745859600006"
+                                            alt="Desktop Hero"
+                                            class="desktop-hero w-full h-auto max-w-[700px] mx-auto" />
+                                        <img class="mobile-hero w-full h-auto max-w-[375px] mx-auto"
+                                            src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/mobile%20hero%20img.png?v=1745859249233"
+                                            alt="Mobile Hero" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-1 md:order-2 flex flex-col items-center">
+                        <div class=" feature-tag pt-6">
+                            <span class="mr-1">✨</span>
+                            Bem-vindo ao BlackArrow
+                        </div>
+
+                        <h1
+                            class="text-foreground text-center py-6 text-5xl font-medium tracking-normal sm:text-6xl md:text-7xl lg:text-7xl leading-[1.15] w-full font-heading neon-text">
+                            Sua próxima plataforma favorita
+                            <span class="text-[#0068ff] inline-block">
+                                de trading está aqui.
+                            </span>
+                        </h1>
+
+                        <p class="mb-8 text-lg tracking-tight text-muted-foreground md:text-xl max-w-2xl mx-auto">
+                            O problema não é a sua corretora
+                            <br class="md:block">
+                            <span class="md:block"> É a sua plataforma.</span>
+                        </p>
+                        <div class="flex items-center justify-center whitespace-nowrap gap-4 z-10">
+                            <a id="openModalBtn" class="typo-button">
+                                Comece agora
+                                <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative pt-20 pb-20 md:py-32 px-2 bg-transparent w-full reveal-from-bottom"
+                    id="dashboard-container">
+                    <div
+                        class="absolute md:top-[10%] left-1/2 gradient w-3/4 -translate-x-1/2 h-1/4 md:h-1/3 inset-0 blur-[5rem] animate-image-glow">
+                    </div>
+                    <div
+                        class="dashboard-frame -m-2 rounded-xl p-2 ring-1 ring-inset ring-foreground/20 lg:-m-4 lg:rounded-2xl bg-opacity-50 backdrop-blur-3xl">
+                        <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/dashboard-light.png?v=1745322801269"
+                            alt="Dashboard" class="rounded-md lg:rounded-xl bg-foreground/10 ring-1 ring-border w-full">
+                        <div class="absolute -bottom-4 inset-x-0 w-full h-1/2 bg-gradient-to-t from-background z-10">
+                        </div>
+                        <div
+                            class="absolute bottom-0 md:-bottom-8 inset-x-0 w-full h-1/4 bg-gradient-to-t from-background z-20">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Proof Section -->
+        <section class="py-20 pb-40">
+            <div class="max-w-screen-xl mx-auto">
+                <div class="flex flex-col md:flex-row items-center">
+                    <!-- Left side: Text content (50%) -->
+                    <div
+                        class="w-full md:w-1/2 px-4 md:px-8 lg:px-12 flex flex-col justify-center items-center md:items-start text-center md:text-left reveal-from-left">
+                        <div class="feature-tag">
+                            <span class="mr-1">💬</span>
+                            Trading de Nova Geração
+                        </div>
+                        <h2
+                            class="text-3xl md:text-4xl lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
+                            Confiado por mais de 2M+ traders
+                            <span class="text-[#0068ff] inline-block">em todo o mundo.</span>
+                        </h2>
+                        <p class="mt-4 text-lg text-muted-foreground">
+                            Descubra por que outros estão escolhendo uma maneira melhor de operar.
+
+                        </p>
+                        <a href="#topSection"
+                            class="no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline">
+                            Não Perca
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+
+                    <!-- Right side: Video (50%, full-width on mobile, border-radius applied) -->
+                    <div class="w-4/5 md:w-2/5 mx-auto md:p-0 mt-8 md:mt-0 reveal-from-right">
+                        <div class="testimonial-video-container">
+                            <video autoplay loop muted playsinline class="testimonial-video w-full h-auto rounded-lg">
+                                <!-- WebM first, for browsers that support it -->
+                                <source
+                                    src="https://downloadserver-cdn.nelogica.com.br/content/site/blackarrow/home/realTraders/home-video2.webm"
+                                    type="video/webm">
+                                <!-- MP4 fallback for Safari/most mobiles -->
+                                <source
+                                    src="https://cdn.glitch.global/dc147a64-5aa0-4203-a261-f712f8734d00/home-video2.mp4?v=1745693189716"
+                                    type="video/mp4">
+                                Seu navegador não suporta vídeo HTML5.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="max-w-screen-xl mx-auto px-4 md:px-12 lg:px-20">
+            <div class="flex flex-col w-full items-center lg:items-center justify-center py-8 reveal-from-bottom">
+                <div class="feature-tag">
+                    <span class="mr-1">✨</span>
+                    Recursos
+                </div>
+                <h2
+                    class="text-center lg:text-center text-3xl md:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6">
+                    Todas as ferramentas. Uma plataforma inteligente.
+                </h2>
+                <p class="mt-4 text-center lg:text-center text-lg text-muted-foreground max-w-lg">
+                    Gráficos ilimitados, mais de 100 indicadores e alertas personalizados — tudo projetado para traders que querem mais
+                    controle.
+                    Construído para mercados globais, automação e decisões mais inteligentes.
+
+                </p>
+            </div>
+
+            <Section class="magic-slider">
+
+                <div class="slider-wrapper">
+                    <div class="feature-slider">
+                        <div class="slider-container">
+                            <!-- Slide 1 -->
+                            <div class="slider-item active" data-index="0">
+                                <div class="slider-content">
+                                    <h3
+                                        class="text-3xl md:text-4xl mb-6 lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
+                                        Gráficos de Próximo Nível</h3>
+                                    <p class="slider-description">Dê vida à sua análise com gráficos poderosos e interativos.
+                                        Envie ordens diretamente do gráfico, personalize seus indicadores, configure
+                                        alertas inteligentes e opere com confiança.
+                                    </p>
+                                    <a href="#topSection"
+                                        class="self-start no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline">
+                                        Não Perca
+                                        <i class="fas fa-arrow-right ml-2"></i>
+                                    </a>
+                                </div>
+                                <div class="slider-image">
+                                    <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/powerfulgraphs.png?v=1747070678157"
+                                        alt="Gráficos poderosos">
+                                </div>
+                            </div>
+
+                            <!-- Slide 2 -->
+                            <div class="slider-item" data-index="1">
+                                <div class="slider-content">
+                                    <h3
+                                        class="text-3xl md:text-4xl mb-6 lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
+                                        Replay de Mercado
+                                    </h3>
+                                    <p class="slider-description">Opere mercados passados como se estivessem ao vivo. Reproduza sessões
+                                        completas, teste estratégias e experimente condições em tempo real a qualquer momento.
+                                    </p>
+                                    <a href="#topSection"
+                                        class="self-start no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline">
+                                        Não Perca
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                    </a>
+                                </div>
+                                <div class="slider-image">
+                                    <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/img-replay.png?v=1747070679485"
+                                        alt="Replay do Mercado">
+                                </div>
+                            </div>
+
+                            <!-- Slide 3 -->
+
+                            <!-- Slide 4 -->
+                            <div class="slider-item" data-index="3">
+                                <div class="slider-content">
+                                    <h3
+                                        class="text-3xl md:text-4xl mb-6 lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
+                                        Múltiplos Mercados, Uma Plataforma</h3>
+                                    <p class="slider-description">Descubra um mundo de oportunidades de trading. Acesse
+                                        múltiplos mercados e tipos de ativos. Tudo o que você precisa para ir mais longe está aqui
+                                        mesmo, em um só lugar.
+                                    </p>
+                                    <a href="#topSection"
+                                        class="self-start no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline">
+                                        Não Perca
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                    </a>
+                                </div>
+                                <div class="slider-image">
+                                    <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/automation.png?v=1747070683210"
+                                        alt="Automação avançada">
+                                </div>
+                            </div>
+
+                            <!-- Slide 5 -->
+                            <div class="slider-item" data-index="4">
+                                <div class="slider-content">
+                                    <h3
+                                        class="text-3xl md:text-4xl mb-6 lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
+                                        Múltiplos Mercados, Uma Plataforma</h3>
+                                    <p class="slider-description">Descubra um mundo de oportunidades de trading. Acesse
+                                        múltiplos mercados e tipos de ativos. Tudo o que você precisa para ir mais longe está aqui
+                                        mesmo, em um só lugar.</p>
+                                    <a href="#topSection"
+                                        class="self-start no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline">
+                                        Não Perca
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                    </a>
+                                </div>
+                                <div class="slider-image">
+                                    <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/ativos.png?v=1747070685349"
+                                        alt="Milhares de ativos">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div class="progress" id="progress"></div>
+                        </div>
+
+                        <div class="slider-controls">
+                            <div class="slider-dots">
+                                <button class="slider-dot active" data-index="0" aria-label="Ir para slide 1"></button>
+                                <button class="slider-dot" data-index="1" aria-label="Ir para slide 2"></button>
+                                <button class="slider-dot" data-index="2" aria-label="Ir para slide 3"></button>
+                                <button class="slider-dot" data-index="3" aria-label="Ir para slide 4"></button>
+                                <button class="slider-dot" data-index="4" aria-label="Ir para slide 5"></button>
+                            </div>
+
+                            <div class="slider-arrows">
+                                <button class="slider-arrow prev-slide" aria-label="Slide anterior">
+                                    <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/bg-ic.svg?v=1747308673579"
+                                        alt="ícone" class="w-10 h-10" />
+                                </button>
+                                <button class="slider-autoplay" aria-label="Pausar apresentação">
+                                    <img class="pause-icon"
+                                        src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/bg-ic(3).svg?v=1747309335486"
+                                        alt="ícone" class="w-10 h-10" />
+                                    <img class="play-icon"
+                                        src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/bg-ic(2).svg?v=1747309335443"
+                                        alt="ícone" class="w-10 h-10" />
+                                </button>
+                                <button class="slider-arrow next-slide" aria-label="Próximo slide">
+                                    <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/bg-ic(1).svg?v=1747308673203"
+                                        alt="ícone" class="w-10 h-10" />
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </Section>
+
+
+            <!-- Features Section -->
+            <section id="features-2" class="py-20">
+                <div class="max-w-screen-xl mx-auto px-4 md:px-12 lg:px-20 features-6">
+                    <div
+                        class="flex flex-col w-full items-center lg:items-center justify-center py-8 reveal-from-bottom">
+                        <div class="feature-tag">
+                            <span class="mr-1">✨</span>
+                            Recursos
+                        </div>
+                        <h2
+                            class="text-center lg:text-center text-3xl md:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
+                            Seção 2
+                        </h2>
+                        <p class="mt-4 text-center lg:text-center text-lg text-muted-foreground max-w-lg">
+                            Ainda não é um trader? Estes são os motivos pelos quais você deveria considerar se tornar um:
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-12" id="features-grid-2">
+                        <!-- Update the magic cards in the second features section to also have background images -->
+                        <!-- Feature 1 -->
+                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
+                            <div class="flex flex-col items-start justify-center w-full">
+                                <i class="fas fa-link text-2xl text-foreground"></i>
+                                <div class="flex flex-col relative items-start mt-6">
+                                    <h3 class="text-base font-medium text-foreground">Liberdade para decidir quando e onde
+                                        você opera.</h3>
+                                    <p class="mt-2 text-sm text-muted-foreground">O trading oferece a flexibilidade para
+                                        definir seu próprio horário e trabalhar de qualquer lugar — sem necessidade de um emprego tradicional.</p>
+                                </div>
+                            </div>
+                            <div class="bento-card-background"></div>
+                        </div>
+
+                        <!-- Feature 2 -->
+                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
+                            <div class="flex flex-col items-start justify-center w-full">
+                                <i class="fas fa-chart-line text-2xl text-foreground"></i>
+                                <div class="flex flex-col relative items-start mt-6">
+                                    <h3 class="text-base font-medium text-foreground">Mercados abertos 24/5 — encaixe o trading
+                                        na sua vida.</h3>
+                                    <p class="mt-2 text-sm text-muted-foreground">Os mercados globais funcionam quase sem parar, então
+                                        você pode operar nos horários que melhor se adaptam à sua rotina e estilo de vida.</p>
+                                </div>
+                            </div>
+                            <div class="bento-card-background"></div>
+                        </div>
+
+                        <!-- Feature 3 -->
+                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
+                            <div class="flex flex-col items-start justify-center w-full">
+                                <i class="fas fa-lock text-2xl text-foreground"></i>
+                                <div class="flex flex-col relative items-start mt-6">
+                                    <h3 class="text-base font-medium text-foreground">A chance de construir uma fonte extra
+                                        de renda.</h3>
+                                    <p class="mt-2 text-sm text-muted-foreground">Comece pequeno, cresça constantemente e trabalhe
+                                        em direção aos seus objetivos financeiros, um passo de cada vez.</p>
+                                </div>
+                            </div>
+                            <div class="bento-card-background"></div>
+                        </div>
+
+                        <!-- Feature 4 -->
+                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
+                            <div class="flex flex-col items-start justify-center w-full">
+                                <i class="fas fa-qrcode text-2xl text-foreground"></i>
+                                <div class="flex flex-col relative items-start mt-6">
+                                    <h3 class="text-base font-medium text-foreground">Códigos QR personalizados</h3>
+                                    <p class="mt-2 text-sm text-muted-foreground">Gere códigos QR personalizados para seus
+                                        links.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="bento-card-background"></div>
+                        </div>
+
+                        <!-- Feature 5 -->
+                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
+                            <div class="flex flex-col items-start justify-center w-full">
+                                <i class="fas fa-clock text-2xl text-foreground"></i>
+                                <div class="flex flex-col relative items-start mt-6">
+                                    <h3 class="text-base font-medium text-foreground">Expiração de links</h3>
+                                    <p class="mt-2 text-sm text-muted-foreground">Defina uma data de expiração para seus links.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="bento-card-background"></div>
+                        </div>
+
+                        <!-- Feature 6 -->
+                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
+                            <div class="flex flex-col items-start justify-center w-full">
+                                <i class="fas fa-users text-2xl text-foreground"></i>
+                                <div class="flex flex-col relative items-start mt-6">
+                                    <h3 class="text-base font-medium text-foreground">Colaboração em equipe</h3>
+                                    <p class="mt-2 text-sm text-muted-foreground">Compartilhe links com sua equipe e
+                                        colabore em tempo real.</p>
+                                </div>
+                            </div>
+                            <div class="bento-card-background"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Process Section -->
+            <section class="py-40 pb-20">
+                <div class="max-w-screen-xl mx-auto px-4 md:px-12 lg:px-20">
+                    <div
+                        class="flex flex-col items-center lg:items-center justify-center w-full py-8 max-w-xl mx-auto reveal-from-bottom">
+                        <div class="feature-tag">
+                            <span class="mr-1">🔄</span>
+                            O Processo
+                        </div>
+                        <h2
+                            class="text-center lg:text-center text-3xl md:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
+                            Faça a mudança que seu futuro eu agradecerá
+                        </h2>
+                        <p class="mt-4 text-center lg:text-center text-lg text-muted-foreground max-w-lg">
+                            Ainda não é um trader? Estes são os motivos pelos quais você deveria considerar se tornar um.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full py-8 gap-4 md:gap-8"
+                        id="process-grid">
+                        <!-- Update the process section cards to also have background images -->
+                        <!-- Step 1 -->
+                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
+                            <div class="flex flex-col items-start justify-center w-full">
+                                <i class="fas fa-wand-magic-sparkles text-2xl text-foreground"></i>
+                                <div class="flex flex-col relative items-start">
+                                    <span
+                                        class="absolute -top-6 right-0 border-2 border-border text-foreground font-medium text-2xl rounded-full w-12 h-12 flex items-center justify-center pt-0.5 animate-pulse">1</span>
+                                    <h3 class="text-base mt-6 font-medium text-foreground">Liberdade para decidir quando e
+                                        onde você opera.</h3>
+                                    <p class="mt-2 text-sm text-muted-foreground">O trading oferece a flexibilidade para
+                                        definir seu próprio horário e trabalhar de qualquer lugar — sem necessidade de um emprego tradicional.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
+                            <div class="flex flex-col items-start justify-center w-full">
+                                <i class="fas fa-calendar text-2xl text-foreground"></i>
+                                <div class="flex flex-col relative items-start">
+                                    <span
+                                        class="absolute -top-6 right-0 border-2 border-border text-foreground font-medium text-2xl rounded-full w-12 h-12 flex items-center justify-center pt-0.5 animate-pulse">2</span>
+                                    <h3 class="text-base mt-6 font-medium text-foreground">Mercados abertos 24/5 — encaixe
+                                        o trading na sua vida.</h3>
+                                    <p class="mt-2 text-sm text-muted-foreground">Os mercados globais funcionam quase sem parar, então
+                                        você pode operar nos horários que melhor se adaptam à sua rotina e estilo de vida.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="magic-card group" style="--x: 50%; --y: 50%;">
+                            <div class="flex flex-col items-start justify-center w-full">
+                                <i class="fas fa-money-bill-trend-up text-2xl text-foreground"></i>
+                                <div class="flex flex-col relative items-start">
+                                    <span
+                                        class="absolute -top-6 right-0 border-2 border-border text-foreground font-medium text-2xl rounded-full w-12 h-12 flex items-center justify-center pt-0.5 animate-pulse">3</span>
+                                    <h3 class="text-base mt-6 font-medium text-foreground">A chance de construir uma fonte extra
+                                        de renda.</h3>
+                                    <p class="mt-2 text-sm text-muted-foreground">Comece pequeno, cresça constantemente e trabalhe
+                                        em direção aos seus objetivos financeiros, um passo de cada vez.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Social Proof Section -->
+            <section class="pt-20">
+                <div class="max-w-screen-xl mx-auto">
+                    <div class="flex flex-col md:flex-row">
+                        <!-- Left side: Text content (smaller) -->
+                        <div
+                            class="w-full md:w-1/3 px-4 md:px-8 lg:px-12 flex flex-col items-center md:items-start text-center md:text-left reveal-from-left">
+                            <div class="feature-tag">
+                                <span class="mr-1">💬</span>
+                                Depoimentos
+                            </div>
+                            <h2
+                                class="text-3xl md:text-4xl lg:text-5xl leading-[1.1] font-medium font-heading text-foreground mt-6 neon-text">
+                                Veja o que outros traders
+                                <span class="text-[#0068ff] inline-block">estão dizendo.</span>
+                            </h2>
+                            <p class="mt-4 text-lg text-muted-foreground">
+                                Sua jornada de trading pode começar hoje — por que esperar?
+                            </p>
+                            <a href="#topSection"
+                                class="no-underline hover:no-underline focus:no-underline typo-button mt-8 inline-flex items-center text-[#0068ff] hover:underline">
+                                Não Perca
+                                <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+
+                        <!-- Right side: Image (larger, full-width, no padding) -->
+                        <div class="w-full md:w-1/3 md:p-0 mt-8 md:mt-0 reveal-from-right">
+                            <!-- Desktop image -->
+                            <div class="hidden md:block testimonial-image-container">
+                                <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/BA_Prova-Social%20br%20new.png?v=1747746364257"
+                                    alt="BlackArrow Depoimentos" class="testimonial-image w-full h-auto" />
+                            </div>
+
+                            <!-- Mobile image -->
+                            <div
+                                class="block md:hidden relative left-1/2 right-1/2 -translate-x-1/2 w-screen overflow-hidden">
+                                <img src="https://cdn.glitch.global/b507c9a9-32e5-471c-a882-b0b402881b8f/BA_Prova-Social%20br%20new.png?v=1747746364257"
+                                    alt="BlackArrow Depoimentos" class="w-full h-auto" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- Pricing Section -->
+
+            <!-- CTA Section -->
+
+    </main>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+
+            // === Scroll reveal animations ===
+            function initScrollAnimations() {
+                const createSequence = (selector, container) => {
+                    const elements = document.querySelectorAll(selector);
+
+                    const sortedElements = Array.from(elements).sort((a, b) => {
+                        const aRect = a.getBoundingClientRect();
+                        const bRect = b.getBoundingClientRect();
+                        if (Math.abs(aRect.top - bRect.top) < 50) {
+                            return aRect.left - bRect.left;
+                        }
+                        return aRect.top - bRect.top;
+                    });
+
+                    sortedElements.forEach((element, index) => {
+                        gsap.fromTo(element,
+                            {
+                                y: element.classList.contains('reveal-from-bottom') ? 30 : 0,
+                                x: element.classList.contains('reveal-from-left') ? -30 : element.classList.contains('reveal-from-right') ? 30 : 0,
+                                opacity: 0,
+                                filter: "blur(8px)"
+                            },
+                            {
+                                y: 0,
+                                x: 0,
+                                opacity: 1,
+                                filter: "blur(0px)",
+                                duration: 0.5,
+                                delay: index * 0.05,
+                                ease: "power3.out",
+                                scrollTrigger: {
+                                    trigger: container || element,
+                                    start: "top 85%",
+                                    toggleActions: "play none none none"
+                                }
+                            }
+                        );
+                    });
+                };
+
+                createSequence('.reveal-from-bottom, .reveal-from-left, .reveal-from-right');
+                createSequence('#features-grid-2 .magic-card', '#features-grid-2');
+                createSequence('#process-grid .magic-card', '#process-grid');
+                createSequence('#features-grid .bento-card', '#features-grid');
+            }
+
+            initScrollAnimations();
+
+            // === Dashboard frame neon effect ===
+            function initDashboardAnimation() {
+                const dashboardFrame = document.querySelector('.dashboard-frame');
+                if (!dashboardFrame) return;
+
+                setTimeout(() => {
+                    dashboardFrame.classList.add('active');
+                }, 1000);
+
+                gsap.to(dashboardFrame, {
+                    boxShadow: '0 0 20px rgba(0, 104, 255, 0.4)',
+                    duration: 2,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut"
+                });
+            }
+
+            initDashboardAnimation();
+
+            // === Magic card hover effect ===
+            document.querySelectorAll('.magic-card').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--x', `${x}px`);
+                    card.style.setProperty('--y', `${y}px`);
+                });
+            });
+
+            // === Bento card hover effect ===
+            document.querySelectorAll('.bento-card').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    card.style.setProperty('--x', `${x}px`);
+                    card.style.setProperty('--y', `${y}px`);
+
+                    const opacityBase = 0.75;
+                    const opacityBoost = 0.25;
+                    const opacityX = x / rect.width;
+                    const opacityY = 1 - (y / rect.height);
+                    const diagonalPosition = (opacityX + opacityY) / 2;
+                    const newOpacity = opacityBase + (diagonalPosition * opacityBoost);
+
+                    const background = card.querySelector('.bento-card-background');
+                    if (background) {
+                        background.style.opacity = newOpacity.toString();
+                        if (card.classList.contains('small-card')) {
+                            background.style.transform = `scale(${1.05 + diagonalPosition * 0.1})`;
+                        } else {
+                            background.style.transform = `translateX(0px)`;
+                        }
+                    }
+                });
+
+                card.addEventListener('mouseleave', e => {
+                    const background = card.querySelector('.bento-card-background');
+                    if (background) {
+                        background.style.opacity = '0.75';
+                        if (card.classList.contains('small-card')) {
+                            background.style.transform = 'scale(1.05)';
+                        } else if (card.classList.contains('large-card')) {
+                            background.style.transform = 'translateX(0)';
+                        }
+                    }
+                });
+            });
+
+            // === Fill background images into bento cards ===
+            const cards = document.querySelectorAll('.bento-card');
+            cards.forEach(card => {
+                const background = card.getAttribute('data-background');
+                if (background) {
+                    const backgroundElement = card.querySelector('.bento-card-background');
+                    if (backgroundElement) {
+                        backgroundElement.style.backgroundImage = background;
+                    }
+                }
+            });
+
+        });
+
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sliderItems = document.querySelectorAll('.slider-item');
+            const sliderDots = document.querySelectorAll('.slider-dot');
+            const prevButton = document.querySelector('.prev-slide');
+            const nextButton = document.querySelector('.next-slide');
+            const autoplayButton = document.querySelector('.slider-autoplay');
+            const pauseIcon = document.querySelector('.pause-icon');
+            const playIcon = document.querySelector('.play-icon');
+            const progressBar = document.getElementById('progress');
+
+            let currentIndex = 0;
+            let interval;
+            let isPlaying = true;
+            const slideDuration = 5000; // 5 seconds per slide
+            let animationStartTime;
+
+            // Function to update progress bar
+            function updateProgressBar(timestamp) {
+                if (!animationStartTime) animationStartTime = timestamp;
+                if (!isPlaying) return;
+
+                const elapsed = timestamp - animationStartTime;
+                const progress = Math.min(elapsed / slideDuration * 100, 100);
+                progressBar.style.width = `${progress}%`;
+
+                if (elapsed < slideDuration) {
+                    requestAnimationFrame(updateProgressBar);
+                } else {
+                    // Move to next slide when progress is complete
+                    goToNextSlide();
+                }
+            }
+
+            // Function to change slide
+            function changeSlide(index) {
+                // Handle previous slide class
+                sliderItems[currentIndex].classList.remove('active');
+                sliderItems[currentIndex].classList.add('prev');
+
+                // Remove active class from all slides and dots
+                setTimeout(() => {
+                    sliderItems.forEach(item => item.classList.remove('prev'));
+                }, 500);
+
+                sliderDots.forEach(dot => dot.classList.remove('active'));
+
+                // Add active class to current slide and dot
+                sliderItems[index].classList.add('active');
+                sliderDots[index].classList.add('active');
+
+                currentIndex = index;
+
+                // Reset and start progress bar
+                progressBar.style.width = '0%';
+                animationStartTime = null;
+                if (isPlaying) {
+                    requestAnimationFrame(updateProgressBar);
+                }
+            }
+
+            // Function to go to next slide
+            function goToNextSlide() {
+                let nextIndex = (currentIndex + 1) % sliderItems.length;
+                changeSlide(nextIndex);
+            }
+
+            // Function to go to previous slide
+            function goToPrevSlide() {
+                let prevIndex = (currentIndex - 1 + sliderItems.length) % sliderItems.length;
+                changeSlide(prevIndex);
+            }
+
+            // Start automatic slideshow
+            function startSlideshow() {
+                isPlaying = true;
+                pauseIcon.style.display = 'block';
+                playIcon.style.display = 'none';
+                requestAnimationFrame(updateProgressBar);
+            }
+
+            // Pause slideshow
+            function pauseSlideshow() {
+                isPlaying = false;
+                pauseIcon.style.display = 'none';
+                playIcon.style.display = 'block';
+            }
+
+            // Add click event to dots
+            sliderDots.forEach(dot => {
+                dot.addEventListener('click', function () {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    changeSlide(index);
+                });
+            });
+
+            // Add click event to prev button
+            prevButton.addEventListener('click', function () {
+                goToPrevSlide();
+            });
+
+            // Add click event to next button
+            nextButton.addEventListener('click', function () {
+                goToNextSlide();
+            });
+
+            // Add click event to autoplay button
+            autoplayButton.addEventListener('click', function () {
+                if (isPlaying) {
+                    pauseSlideshow();
+                } else {
+                    startSlideshow();
+                }
+            });
+
+            // Add keyboard navigation
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'ArrowLeft') {
+                    goToPrevSlide();
+                } else if (e.key === 'ArrowRight') {
+                    goToNextSlide();
+                } else if (e.key === ' ') {
+                    // Space bar toggles play/pause
+                    if (isPlaying) {
+                        pauseSlideshow();
+                    } else {
+                        startSlideshow();
+                    }
+                    e.preventDefault(); // Prevent page scrolling on space
+                }
+            });
+
+            // Add touch support
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            const slider = document.querySelector('.feature-slider');
+
+            slider.addEventListener('touchstart', function (e) {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            slider.addEventListener('touchend', function (e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                if (touchEndX < touchStartX - swipeThreshold) {
+                    // Swipe left, go to next slide
+                    goToNextSlide();
+                } else if (touchEndX > touchStartX + swipeThreshold) {
+                    // Swipe right, go to previous slide
+                    goToPrevSlide();
+                }
+            }
+
+            // Start the slideshow
+            startSlideshow();
+
+            // Pause slideshow when tab is not visible
+            document.addEventListener('visibilitychange', function () {
+                if (document.hidden) {
+                    pauseSlideshow();
+                } else if (!document.hidden && isPlaying) {
+                    startSlideshow();
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sliderItems = document.querySelectorAll('.slider-item');
+            const sliderDots = document.querySelectorAll('.slider-dot');
+            const prevButton = document.querySelector('.prev-slide');
+            const nextButton = document.querySelector('.next-slide');
+            const autoplayButton = document.querySelector('.slider-autoplay');
+            const pauseIcon = document.querySelector('.pause-icon');
+            const playIcon = document.querySelector('.play-icon');
+            const progressBar = document.getElementById('progress');
+
+            let currentIndex = 0;
+            let isPlaying = true;
+            const slideDuration = 5000;
+            let animationStartTime;
+
+            function updateProgressBar(timestamp) {
+                if (!animationStartTime) animationStartTime = timestamp;
+                if (!isPlaying) return;
+
+                const elapsed = timestamp - animationStartTime;
+                const progress = Math.min(elapsed / slideDuration * 100, 100);
+                progressBar.style.width = `${progress}%`;
+
+                if (elapsed < slideDuration) {
+                    requestAnimationFrame(updateProgressBar);
+                } else {
+                    goToNextSlide();
+                }
+            }
+
+            function changeSlide(index) {
+                const isMobile = window.innerWidth <= 992;
+                sliderItems[currentIndex].classList.remove('active');
+                if (!isMobile) {
+                    sliderItems[currentIndex].classList.add('prev');
+                }
+                setTimeout(() => {
+                    sliderItems.forEach(item => item.classList.remove('prev'));
+                }, 500);
+
+                sliderDots.forEach(dot => dot.classList.remove('active'));
+                sliderItems[index].classList.add('active');
+                sliderDots[index].classList.add('active');
+
+                currentIndex = index;
+                progressBar.style.width = '0%';
+                animationStartTime = null;
+                if (isPlaying) requestAnimationFrame(updateProgressBar);
+            }
+
+            function goToNextSlide() {
+                let nextIndex = (currentIndex + 1) % sliderItems.length;
+                changeSlide(nextIndex);
+            }
+
+            function goToPrevSlide() {
+                let prevIndex = (currentIndex - 1 + sliderItems.length) % sliderItems.length;
+                changeSlide(prevIndex);
+            }
+
+            function startSlideshow() {
+                isPlaying = true;
+                pauseIcon.style.display = 'block';
+                playIcon.style.display = 'none';
+                requestAnimationFrame(updateProgressBar);
+            }
+
+            function pauseSlideshow() {
+                isPlaying = false;
+                pauseIcon.style.display = 'none';
+                playIcon.style.display = 'block';
+            }
+
+            sliderDots.forEach(dot => {
+                dot.addEventListener('click', function () {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    changeSlide(index);
+                });
+            });
+
+            prevButton.addEventListener('click', goToPrevSlide);
+            nextButton.addEventListener('click', goToNextSlide);
+
+            autoplayButton.addEventListener('click', function () {
+                if (isPlaying) {
+                    pauseSlideshow();
+                } else {
+                    startSlideshow();
+                }
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'ArrowLeft') goToPrevSlide();
+                else if (e.key === 'ArrowRight') goToNextSlide();
+                else if (e.key === ' ') {
+                    if (isPlaying) pauseSlideshow();
+                    else startSlideshow();
+                    e.preventDefault();
+                }
+            });
+
+            let touchStartX = 0;
+            let touchEndX = 0;
+            const slider = document.querySelector('.feature-slider');
+
+            slider.addEventListener('touchstart', function (e) {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            slider.addEventListener('touchend', function (e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                if (touchEndX < touchStartX - swipeThreshold) goToNextSlide();
+                else if (touchEndX > touchStartX + swipeThreshold) goToPrevSlide();
+            }
+
+            function handleResize() {
+                if (window.innerWidth <= 992) {
+                    document.querySelector('.slider-container').style.height = 'auto';
+                }
+            }
+
+            window.addEventListener('resize', handleResize);
+            handleResize();
+
+            startSlideshow();
+
+            document.addEventListener('visibilitychange', function () {
+                if (document.hidden) pauseSlideshow();
+                else if (!document.hidden && isPlaying) startSlideshow();
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modal = document.getElementById('signupModal');
+            const openBtn = document.getElementById('openModalBtn');
+            const closeBtn = modal.querySelector('.close-modal');
+
+            openBtn?.addEventListener('click', () => {
+                modal.classList.add('show');
+            });
+
+            closeBtn?.addEventListener('click', () => {
+                modal.classList.remove('show');
+            });
+
+            // Optional: close when clicking outside modal content
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                }
+            });
+        });
+    </script>
+
+</body>
+
+
+</html>
